@@ -37,7 +37,7 @@ access_token="52314456-zHY3UfyiQ6KVrWrgMLy4nGmPzInaFmxsZVXhKCHfO"
 access_token_secret="zYsjeIH7TKxeJnHxVHwg3HVUynu4JZgKLvfhsUR0Hn7Qh"
 
 #Listen for tweets
-class StdOutListener(StreamListener):
+class TweetListener(StreamListener):
     def on_data(self, data):
 	
 	cursor.execute('''INSERT INTO MyTable(name, geo, image, source, timestamp, text, rt) VALUES(?,?,?,?,?,?,?)''',(tweet.user.screen_name, str(tweet.geo), tweet.user.profile_image_url, tweet.source, tweet.created_at, tweet.text, tweet.retweet_count))
@@ -48,7 +48,7 @@ class StdOutListener(StreamListener):
 
 #Main Function
 if __name__ == '__main__':
-    l = StdOutListener()
+    l = TweetListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
 
