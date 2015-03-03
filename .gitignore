@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+#proec
+log
+*journal
+
 # C extensions
 *.so
 
