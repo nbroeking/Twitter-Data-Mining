@@ -9,4 +9,8 @@ STAGE1: Twitter Mining
 
 STAGE2: Twitter Classification
     Classifier.py
+        1. uses nltk 
+        2. Training data provided by: 
+        3. Naive Basie Approche
+
 
