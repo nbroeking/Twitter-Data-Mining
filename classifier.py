@@ -96,15 +96,27 @@ def train():
 
 def convertDatabase(classifier):
     try:
-        con = lite.connect('Twitter.db')
+        con = lite.connect(sys.args[1])
     
         cur = con.cursor()    
         cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid where Tweets.id < 10 group by Tweets.id;');
     
         rows = cur.fetchall()
 
+        fapple = open('apple.csv','w')
+        google = open('google.csv','w')
+        samsung = open('samsung.csv','w')
+
         for row in rows:
-            print("%d, %s, %r, %d, %s, %d, %d" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
+            if "apple" in row[1].split() or "Apple" in row[1].split() or "APPLE" in row[1].split():
+                f = fapple
+            if "google" in row[1].split() or "Google" in row[1].split() or "GOOGLE" in row[1].split():
+                f = google
+
+            if "samsung" in row[1].split() or "Samsung" in row[1].split() or "SAMSUNG" in row[1].split():
+                f = samsung
+
+            f.write("%d, %s, %r, %d, %s, %d, %d" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
 
     except lite.Error, e:    
         print ( "Error %s:" % e.args[0])
@@ -117,6 +129,10 @@ def convertDatabase(classifier):
 
 #Main Function
 if __name__ == '__main__':
+    
+    if len(sys.args) != 2:
+        print("Error: Usage");
+
     #Training the data
     print ("Training the Classifier")
 
