@@ -62,10 +62,6 @@ def train():
     testingdata = []
     i = 0
     for x in lines:
-        i+= 1
-        if i > 1000:
-            break
-
         line = x.split(",")
         if len(line) is 4:
             text = line[3].split()
@@ -79,10 +75,12 @@ def train():
                 elif word.isalnum() and not len(word) < 3:
                     newtext.append(word)
             tup = (newtext, 'pos' if int(line[1]) else 'neg')
-            #if i < 500000:
-            trainingdata.append(tup)
-            #else:
-            #    testingdata.append(tup)
+            if i < 5000:
+                trainingdata.append(tup)
+            elif i < 10000:
+                testingdata.append(tup)
+            else:
+                break
          
     print('  Performing Feature extraction')
     #Feature extraction
@@ -92,31 +90,43 @@ def train():
     #Feature application
     training_set = nltk.classify.util.apply_features(extract_features, trainingdata)
     
-    return nltk.NaiveBayesClassifier.train(training_set)
+
+    classifier = nltk.NaiveBayesClassifier.train(training_set)
+
+    print("Accuracy:")
+    print(nltk.classify.accuracy(classifier, testintdata))
+
+    return classifier
 
 def convertDatabase(classifier):
     try:
-        con = lite.connect(sys.args[1])
+        con = lite.connect(sys.argv[1])
     
         cur = con.cursor()    
-        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid where Tweets.id < 10 group by Tweets.id;');
+        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id;');
     
         rows = cur.fetchall()
 
-        fapple = open('apple.csv','w')
-        google = open('google.csv','w')
-        samsung = open('samsung.csv','w')
-
+        print("Pulled %d rows" % len(rows))
+        fapple = open('results/apple.csv','w')
+        google = open('results/google.csv','w')
+        samsung = open('results/samsung.csv','w')
+        amazon = open('results/amazon.csv', 'w')
+    
+        f = fapple
         for row in rows:
-            if "apple" in row[1].split() or "Apple" in row[1].split() or "APPLE" in row[1].split():
+            if "apple" in row[1].lower():
                 f = fapple
-            if "google" in row[1].split() or "Google" in row[1].split() or "GOOGLE" in row[1].split():
+            if "google" in row[1].lower():
                 f = google
 
-            if "samsung" in row[1].split() or "Samsung" in row[1].split() or "SAMSUNG" in row[1].split():
+            if "samsung" in row[1].lower():
                 f = samsung
 
-            f.write("%d, %s, %r, %d, %s, %d, %d" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
+            if "amazon" in row[1].lower():
+                f = amazon
+
+            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
 
     except lite.Error, e:    
         print ( "Error %s:" % e.args[0])
@@ -130,9 +140,9 @@ def convertDatabase(classifier):
 #Main Function
 if __name__ == '__main__':
     
-    if len(sys.args) != 2:
+    if len(sys.argv) != 2:
         print("Error: Usage");
-
+        exit(0)
     #Training the data
     print ("Training the Classifier")
 
