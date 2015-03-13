@@ -62,6 +62,7 @@ def train():
     testingdata = []
     i = 0
     for x in lines:
+        i+=1;
         line = x.split(",")
         if len(line) is 4:
             text = line[3].split()
@@ -75,9 +76,9 @@ def train():
                 elif word.isalnum() and not len(word) < 3:
                     newtext.append(word)
             tup = (newtext, 'pos' if int(line[1]) else 'neg')
-            if i < 5000:
+            if i < 1000:
                 trainingdata.append(tup)
-            elif i < 10000:
+            elif i < 8000:
                 testingdata.append(tup)
             else:
                 break
@@ -89,12 +90,12 @@ def train():
     print('  Applying the features to the classifer')
     #Feature application
     training_set = nltk.classify.util.apply_features(extract_features, trainingdata)
-    
 
     classifier = nltk.NaiveBayesClassifier.train(training_set)
 
     print("Accuracy:")
-    print(nltk.classify.accuracy(classifier, testintdata))
+    testing_set = nltk.classify.util.apply_features(extract_features, testingdata)
+    print(nltk.classify.accuracy(classifier, testing_set))
 
     return classifier
 
@@ -114,7 +115,9 @@ def convertDatabase(classifier):
         amazon = open('results/amazon.csv', 'w')
     
         f = fapple
+        i = 0;
         for row in rows:
+            i+=1
             if "apple" in row[1].lower():
                 f = fapple
             if "google" in row[1].lower():
@@ -128,12 +131,22 @@ def convertDatabase(classifier):
 
             f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
 
+            if i %100 == 0:
+                print (i)
+
     except lite.Error, e:    
         print ( "Error %s:" % e.args[0])
         sys.exit(1)
     
     finally:
-    
+        if fapple:
+            fapple.close()
+        if google:
+            google.close()
+        if samsung:
+            samsung.close()
+        if amazon:
+            amazon.close()    
         if con:
             con.close()
 
