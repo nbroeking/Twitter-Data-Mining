@@ -71,7 +71,7 @@ information from yahoo finance. We store the stock data for the same time
 period we get the stock data for multiple granularities.
 
 The next phase in our pipeline is the data storage step. We are using sqlite3 as
-a data warehouse to store all of our tweets. Each tweet stores information
+our database to store all of our tweets. Each tweet stores information
 related to the user and the tweet to determine possible variables to match
 against for the statistical analysis.
 
@@ -90,8 +90,8 @@ We are currently working to implement this phase. We are taking the data and
 trying to detemine a relationship between the sentiment and a change in the
 stock price.
 
-Our next step is to determine the realtionship between the variables and then implemnt a mobile application
-that recomends which company to invest in. 
+Our next step is to determine the realtionship between the variables and then
+implemnt a mobile application that recomends which company to invest in. 
 
 \section{Authors}
 
@@ -108,17 +108,17 @@ markets.
 
 \section{Motivation}
 
-The Stock Market is one of the largest entities in Western
-and World economies. In a world where a 15\% increase is assets per year is
-massive,  even the ability to increase certainty in the market by a few percent
-is a huge. Companies and individuals can harness this technology make billions
-and secure investments, producing and saving billions for the economy. While
-making billions is outside the scope of this project, we think it is possible
-to significantly increase the accuracy of stock predictions. We know that
-public image is critical to stock value. If a company's image drastically
-decreases then we know that its stock value will change. It is our goal to
-discover how the company's public image, determined through Twitter, will
-affect its stock price.  
+The Stock Market is one of the largest entities in Western and World economies.
+In a world where a 15\% increase is assets per year is massive,  even the
+ability to increase certainty in the market by a few percent is a huge.
+Companies and individuals can harness this technology make billions and secure
+investments, producing and saving billions for the economy. While making
+billions is outside the scope of this project, we think it is possible to
+significantly increase the accuracy of stock predictions. We know that public
+image is critical to stock value. If a company's image drastically decreases
+then we predict that its stock value will change. It is our goal to discover
+how the company's public image, determined through Twitter, will affect its
+stock price and then to create an application that recomends stocks for a user.
 
 \section{Literature Survey}
 
@@ -148,7 +148,7 @@ sure is that there is a high correlation between peoples' attitudes and stock
 value. Twitter was used in 2013 to predict a drop in Royal Caribbean's stock
 value when people started tweeting about the flu spreading on one of its
 cruises. Researchers were able to predict the drop in price 48 minutes before
-the stock plunged about 3%.[3]
+the stock plunged about 3\%.[3]
 
 \section{Tasks}
 In order to achive this task we split our project up into 7 tasks.
@@ -165,23 +165,34 @@ sentiment of the tweets and the change in stock price.
 
 Twitter data is collected from the Twitter Streaming api. This api provides us
 anywhere from 4\% to 40\% of all tweets being posted depending on the current
-load that twitter has to handle. These tweets are stored in a sqlite3 database.
-For each tweet we store:  if the tweet was re-tweeted, how many times the tweet
-was re-tweeted, the date and time, the user id, the tweet id, the users
-followers count, the users friend count, the user's name and finally the tweets
-text..
+load that twitter has to handle. As apart of the data collection phase we
+filter our tweets. If a tweet contains any reference to any of the compainies
+we sort it. This allows us to dramatically decrease the amount of tweets that
+we are going to store. After all of our filtering we still have a massive
+amount of data. Each week ends up containing about 2GB of data. This then
+brings the total amount of tweets to over 10GB for about 5 weeks of collecting
+tweets. 
+
+We are storing these tweets in a sqlite3 database. We decided to go with a
+sqilte3 database because it is fast and portable. We choose a relational
+database schema because we needed to optimize our next phases for speed. Beause
+we could have over 20 gb by the end of the semester we need a way to be able to
+easily and quickly read data from the database. For each tweet, we store:  if
+the tweet was re-tweeted, how many times the tweet was re-tweeted, the date and
+time, the user id, the tweet id, the users followers count, the users friend
+count, the user's name and finally the tweets text. 
 
 \subsection{Data Preprocessing}
 
 In the preprocessing step we need to filter our tweets on certain criteria. The
 first thing we do is filter all tweets based off of if they contain a reference
-to one of the four companies. For simplicity if a tweet contains any of the
-words, Apple, Google, Samsung, or Amazon we store it. The next step is to
-filter based off of language. Because analyzing tweets in multiple languages
-makes the problem very difficult we only store english tweets. The final step
-in pre processing the data is to change all URLs in the tweet to URL and to
-change all hashtags to TAG. This allows us to create a feature that we can use
-to do sentiment analysis in the next step.
+to one of the four companies. This step is logically in the Data Preprocessng
+step however we perform it during the collection to try and reduce the volume
+of tweets.  The next step is to filter based off of language. Because analyzing
+tweets in multiple languages makes the problem very difficult we only store
+english tweets. The final step in pre processing the data is to change all URLs
+in the tweet to URL and to change all hashtags to TAG. This allows us to create
+a feature that we can use to do sentiment analysis in the next step.
 
 \subsection{Sentiment Analysis}
 
@@ -210,5 +221,23 @@ much higher seems to be an impossible task.
 
 After we have our classified text we pass 
 
+\subsection{Error Analysis}
 
-\end{document}
+We calculate our error
+
+\subsection{Application}
+
+Our goal is to create a mobile application that can process tweets in real time
+and then display what companies it recomends investing in. In order to
+acomplish this task. We will take our model that we developed using the stages
+above and using a server to analyze tweets in real time. The server will then
+use the model to predict the stock values for the next day. When the user opens
+the app on his phone the app will reach out to the server using a web request
+and get the recomended stocks using json. The mobile device will then display
+these results to the user.
+
+\subsection{Sources}
+
+JOSH CAN YOU USE BIBTEX
+
+ \end{document}
