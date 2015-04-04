@@ -236,14 +236,11 @@
 \topsep 4pt plus 2pt minus 2pt\parsep 2pt plus 1pt minus 1pt
 \itemsep \parsep}}
 
-\def\footnotesize{\@setsize\footnotesize{9pt}\ixpt\@ixpt
-\abovedisplayskip 6.4pt plus 2pt minus 4pt%
-\belowdisplayskip \abovedisplayskip
-\abovedisplayshortskip \z@ plus 1pt%
-\belowdisplayshortskip 2.7pt plus 1pt minus 2pt
-\def\@listi{\leftmargin\leftmargini %% Added 22 Dec 87
-\topsep 3pt plus 1pt minus 1pt\parsep 2pt plus 1pt minus 1pt
-\itemsep \parsep}}
+\def\footnotesize{\@setsize\footnotesize{9pt}\ixpt\@ixpt \abovedisplayskip
+6.4pt plus 2pt minus 4pt% \belowdisplayskip \abovedisplayskip
+\abovedisplayshortskip \z@ plus 1pt% \belowdisplayshortskip 2.7pt plus 1pt
+minus 2pt \def\@listi{\leftmargin\leftmargini %% Added 22 Dec 87 \topsep 3pt
+plus 1pt minus 1pt\parsep 2pt plus 1pt minus 1pt \itemsep \parsep}}
 
 \newcount\aucount
 \newcount\originalaucount
@@ -655,7 +652,7 @@
 % to change {cmr} to {times} above. (Not recommended)
   \renewcommand{\@ptsize}{}
   \renewcommand{\normalsize}{%
-    \@setfontsize\normalsize\@ixpt{10.5\p@}%\ninept%
+    \@setfontsize\normalsize\@ixpt{12\p@}%\ninept%
     \abovedisplayskip 6\p@ \@plus2\p@ \@minus\p@
     \belowdisplayskip \abovedisplayskip
     \abovedisplayshortskip 6\p@ \@minus 3\p@
@@ -664,7 +661,7 @@
   }
 \else
   \def\@normalsize{%changed next to 9 from 10
-    \@setsize\normalsize{9\p@}\ixpt\@ixpt
+    \@setsize\normalsize{12\p@}\ixpt\@ixpt
    \abovedisplayskip 6\p@ \@plus2\p@ \@minus\p@
     \belowdisplayskip \abovedisplayskip
     \abovedisplayshortskip 6\p@ \@minus 3\p@
