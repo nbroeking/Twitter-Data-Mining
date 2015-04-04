@@ -28,11 +28,11 @@ import ast
 word_features = []
 
 #Feature Extration
-def get_words(tweets):
-    all_words = []
-    for (words, sentiment) in tweets:
-      all_words.extend(words)
-    return all_words
+def get_letters(tweets):
+    features = []
+    for (words, sentiment) in tweets:    
+        features.extend(words)
+    return features
 
 #getFeatures
 def get_features(wordlist):
@@ -78,17 +78,22 @@ def train():
             tup = (newtext, 'pos' if int(line[1]) else 'neg')
             if i < 1000:
                 trainingdata.append(tup)
-            elif i < 8000:
+            elif i < 10000:
                 testingdata.append(tup)
             else:
                 break
-         
+
+
     print('  Performing Feature extraction')
     #Feature extraction
-    word_features = get_features(get_words(trainingdata))
+    word_features = get_features(get_letters(trainingdata))
+
+    print("WordFeatures")
+    print(word_features)
 
     print('  Applying the features to the classifer')
     #Feature application
+
     training_set = nltk.classify.util.apply_features(extract_features, trainingdata)
 
     classifier = nltk.NaiveBayesClassifier.train(training_set)
@@ -96,7 +101,7 @@ def train():
     print("Accuracy:")
     testing_set = nltk.classify.util.apply_features(extract_features, testingdata)
     print(nltk.classify.accuracy(classifier, testing_set))
-
+    sys.exit(0)
     return classifier
 
 def convertDatabase(classifier):
