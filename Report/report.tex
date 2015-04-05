@@ -238,9 +238,8 @@ The last major challenge of the sentement analysis is the runtime. We have a
 huge trade off with the number of features, types of features and how long it
 takes to run. Currently, after we limit our features it takes about a second to
 classifiy a tweet. To classify a weeks worth of tweets it takes almost 72
-hours. The problem of classifying runs in O(e) time so for each additional
-thing we do to make our compiler more accurate it takes even longer to run the
-classifier.
+hours. Anytime we train our classifier or add more features it dramatically
+increases the time it takes to classify the tweets.
 
 \subsection{Correlation Analysis}
 
