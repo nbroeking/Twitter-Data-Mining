@@ -216,14 +216,17 @@ better twitter sentiment engine we talked with Jamey Wood, CTO of Wayin. Wayin
 specializes in twitter sentiment analysis. 64\% is acctually a very high
 accuracy for this kind of analysis in industry and so increasing the accuracy
 much higher seems to be an impossible task.
-
+ 
 \subsection{Correlation Analysis}
 
-After we have our classified text we pass 
+Now that the sentiment analysis is completed and we have all the tweets classified as positive or negative we can begin the correleation analysis. We combined the twitter data with historical stock data. The stock data is obtained from http://www.nasdaq.com/quotes/. Specefically we are looking at Open and Close values. Before starting correlation analysis the twitter data and stock had to be combined. This was done all in R. The next step is to regress the change in open and close values for a given day on the percent of positive tweets about the company from the previous day. To be able to do this the twitter and stock data need to be matched up correctly. Because there are days of missing twitter data that cannot be recovered and no stock data on weekends there was some pre-processing involved in matching up tweets from one day with open and close values for the next day. Now we have an R script that is generalized to any set of stock and twitter data with arbitrary patterns of missing days, so processing of further data will be quicker. Currently there aren't enough data points to come to a good conclusion about, but soon there will be a lot more.
+
+Looking ahead, after more data is collected the regression equation will be as follows: $ \ \ Y = \beta_0 + \beta_1X $ where $Y$ is the change in open and close values, and $X$ is the percent of positive tweets from the previous day. We are anticipating to see positive correlation between the percent of positive tweets and the change in open and close values. To test this correlation we'll use the chi-squared test for independence, the lift calculation, and the t-test to test the hypothesis that $\beta_1 = 0$ indicating that $X$ is independent of $Y$. To fit the regression model we will use the ordinary least squares estimator. We're performing this analyis on data from Google, Samsung, Apple, and Amazon. As well I anticipate that the stock data/twitter data for each of those companies will not be independent of each other, so they could potentially be added as regressors in each others models. Once more data is collected we can begin the statistical analysis. 
 
 \subsection{Error Analysis}
 
-We calculate our error
+To evaluate the accuracy of the model we'll look at the $R^2$ value, which shows the percent change in $Y$ that is explained by $X$. We can also look at the standard errors the of regression coefficients and the residuals of the models. If there is lots of correlation in the errors we can try using the generalized least squares estimators instead. 
+
 
 \subsection{Application}
 
