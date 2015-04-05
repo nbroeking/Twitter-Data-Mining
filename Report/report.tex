@@ -180,23 +180,33 @@ we could have over 20 gb by the end of the semester we need a way to be able to
 easily and quickly read data from the database. For each tweet, we store:  if
 the tweet was re-tweeted, how many times the tweet was re-tweeted, the date and
 time, the user id, the tweet id, the users followers count, the users friend
-count, the user's name and finally the tweets text. 
+count, the user's name and finally the tweets text. We want to store as much
+infomation as possible because of the time it takes to gather the data we arnt
+able to collect more if we need more. 
 
 \subsection{Data Preprocessing}
 
-In the preprocessing step we need to filter our tweets on certain criteria. The
-first thing we do is filter all tweets based off of if they contain a reference
-to one of the four companies. This step is logically in the Data Preprocessng
-step however we perform it during the collection to try and reduce the volume
-of tweets.  The next step is to filter based off of language. Because analyzing
-tweets in multiple languages makes the problem very difficult we only store
-english tweets. The final step in pre processing the data is to change all URLs
-in the tweet to URL and to change all hashtags to TAG. This allows us to create
-a feature that we can use to do sentiment analysis in the next step.
+In the preprocessing step we need to filter our tweets on certain criteria.
+Logically we do everything in the data preprocessing step but we acctually do
+them in two different phases. The first part of our preprocessing is done
+during the collection phase. First we filter all tweets based off of if they
+contain a reference to one of the four companies. As apart of the twitter api
+we are able to specify that we only want tweets if they contain the text Apple,
+Google, Samsung, or Amazon. Once we receive the tweet The next step is to
+filter based off of language. Because analyzing tweets in multiple languages
+makes the problem very difficult we only store english tweets. Once we filtered
+our tweets we store them in the database.
+
+Once we have done completed the data collection phase we do the next step of
+the data preprocessing. In this step we prepare the data for sentiment
+analysis. In order to do this we first bin the tweets into four different
+categories based off of a reference to the company. For example if a tweet
+contains "Apple" we put into Apples bin.  
 
 \subsection{Sentiment Analysis}
 
 Once we have preprocessed all of the tweets we can finally analyze the text
+<<<<<<< HEAD
 segment. To perform sentiment analysis we use a naive Bayes classifier. We
 train the classifier on 5000 tweets and then test its accuracy with 10000
 tweets.  We are only interested in the ratio between positive tweets to total
@@ -217,6 +227,44 @@ specializes in twitter sentiment analysis. 64\% is acctually a very high
 accuracy for this kind of analysis in industry and so increasing the accuracy
 much higher seems to be an impossible task.
  
+=======
+segment. To perform sentiment analysis we use a naive bayes classifier from the
+nltk python library. We train the classifier on 5000 tweets and then test its
+accuracy with 10000 tweets. Each one of these tweets was hand classified and
+publicly published online. We are only interested in the ratio between positive
+tweets to total tweets so we trained our classifier to mark anything that was
+not obviously positive as negative. We did not need to include a neutral
+category.
+
+The major part of the sentiment analysis was choosing features to use for our
+classifier. We experimented with using different features such as letters, user
+attributes, and tweet attributes but for the most part these led to very low
+accuracies. Finally we found that using the words yeiled the best result. In
+order to determine the features we first take the training data and calculate
+the probabilties for the naive bayse classifier. Once we have trained the data
+we take the top 50 infulential features and remove all others from the list. We
+do this to decrease the run time of the sentiment analysis.
+
+The major challenge with the naive basian classifier is getting a high
+accuracy. Even with our best features we were only able to get our accuracy
+higher than 64\%.  We were not initially satisfied with this accuracy however
+in our research to create a better twitter sentiment engine we talked with
+Jamey Wood, CTO of Wayin. Wayin specializes in twitter sentiment analysis and
+does it on a daily basis for many custimers. He told us that 64\% is acctually
+a very high accuracy for this kind of analysis in industry and so trying to
+raise this accuracy would be a waiste of time. However we still want to look at
+other possibilities if time allows that could possible increase the accuracy of
+our sentiment analysis. 
+
+The last major challenge of the sentement analysis is the runtime. We have a
+huge trade off with the number of features, types of features and how long it
+takes to run. Currently, after we limit our features it takes about a second to
+classifiy a tweet. To classify a weeks worth of tweets it takes almost 72
+hours. The problem of classifying runs in O(e) time so for each additional
+thing we do to make our compiler more accurate it takes even longer to run the
+classifier.
+
+>>>>>>> daeb8a18e5ad8555d3eb8f3641621abf53781d5a
 \subsection{Correlation Analysis}
 
 Now that the sentiment analysis is completed and we have all the tweets classified as positive or negative we can begin the correleation analysis. We combined the twitter data with historical stock data. The stock data is obtained from http://www.nasdaq.com/quotes/. Specefically we are looking at Open and Close values. Before starting correlation analysis the twitter data and stock had to be combined. This was done all in R. The next step is to regress the change in open and close values for a given day on the percent of positive tweets about the company from the previous day. To be able to do this the twitter and stock data need to be matched up correctly. Because there are days of missing twitter data that cannot be recovered and no stock data on weekends there was some pre-processing involved in matching up tweets from one day with open and close values for the next day. Now we have an R script that is generalized to any set of stock and twitter data with arbitrary patterns of missing days, so processing of further data will be quicker. Currently there aren't enough data points to come to a good conclusion about, but soon there will be a lot more.
