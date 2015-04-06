@@ -26,13 +26,20 @@
 
 \begin{document}
 
+\toappear{Permission to make digital or hard copies of all or part of this work for
+personal or classroom use is granted without fee provided that copies are not
+made or distributed for profit or commercial advantage and that copies bear
+this notice and the full citation on the first page. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior
+specific permission..  Copyright 2015 Broeking, Rahm, Hoffee}
+
 \maketitle
 
 \begin{abstract}
 With social media on the rise, the amount of data available for processing is
 growing at an increasing rate. It is an advanced area of research to be able to
 use that data to predict or better understand the world around us. In our
-project we will attempt to use Twitter to determine if, and how strong of, a
+project we attemptedto use Twitter to determine if, and how strong of, a
 relationship exists between public sentiment and chosen stock values.
 
 \end{abstract}
@@ -62,25 +69,26 @@ of social data available online for analysis. The popular social media site,
 Twitter, gets an average of 6,000 tweets posted per second and 500 million per
 day. These tweets can be analyzed to determine future market values. For the
 purposes of this project we looked at four companies, Amazon, Apple, Google,
-and Samsung.o  
+and Samsung. 
 
 The first step is to open a connection to the twitter streaming api. Using this
 api we receive anywhere between 1\% and 40\% of all the tweets being tweeted.
-This percentage depends on the current Twitter load. We collect the stock
-information from yahoo finance. We store the stock data for the same time
-period we get the stock data for multiple granularities.
+This percentage depends on the current Twitter load. In addition to collecting
+twitter data we also collected historical stock data to compare against the
+twitter data.
 
 The next phase in our pipeline is the data storage step. We are using sqlite3 as
 our database to store all of our tweets. Each tweet stores information
 related to the user and the tweet to determine possible variables to match
 against for the statistical analysis.
 
-The third phase is to pre-process the data. Before we process the data we need
-to filter based on language. We only accept tweets that are English and have no
-images or videos. Once we have our English tweets we start categorizing the
-tweets. We separate each tweet into four different bins, one for each company.
-We then change all URLs to URL and all hash tags to TAG. This allows us to use
-these as features for the sentiment analysis. 
+The third phase is to pre-process the data. Before we perform sentiment
+analysis on the tweets we need to filter based on language. We only accept
+tweets that are English and have no images or videos. Once we have our English
+tweets we start categorizing the tweets. We separate each tweet into four
+different bins, one for each company. We then change all URLs to URL and all
+hash tags to TAG. This allows us to use these as features for the sentiment
+analysis. 
 
 The fourth phase is our sentiment analysis phase. We use a naive Bayesian
 classifier to detect whether a tweet is positive. Once we have applyed our
@@ -296,6 +304,17 @@ these results to the user.
 
 \subsection{Sources}
 
-JOSH CAN YOU USE BIBTEX
+1.) Eduardo J. Ruiz, Vagelis Hristidis, Carlos Catillo, Aristides Gionis, and
+Alejanro Jaimes,  2012, Correlating Financial Time Series with Micro-Blogging
+Activity
+DOI=http://www.cs.ucr.edu/~vagelis/publications/wsdm2012-microblog-financial.pdf 
+
+2.) Johan Bollen, Huina Mao, Xiao-Jun Zeng, 2010, Twitter mood predicts the stock
+market, arXiv:1010.3003 [cs.CE],
+DOI=http://www.sciencedirect.com/science/article/pii/S187775031100007X
+
+
+3.) Stan Alcorn, Twitter Can Predict The Stock Market, If You're Reading The Right
+Tweets, 2013
 
  \end{document}
