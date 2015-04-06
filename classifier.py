@@ -88,8 +88,6 @@ def train():
     #Feature extraction
     word_features = get_features(get_letters(trainingdata))
 
-    print("WordFeatures")
-    print(word_features)
 
     print('  Applying the features to the classifer')
     #Feature application
