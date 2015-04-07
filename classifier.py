@@ -108,8 +108,7 @@ def convertDatabase(classifier):
     
         cur = con.cursor()    
         cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id;');
-    
-        rows = cur.fetchall()
+   
 
         print("Pulled %d rows" % len(rows))
         fapple = open('results/apple.csv','w')
@@ -119,7 +118,7 @@ def convertDatabase(classifier):
     
         f = fapple
         i = 0;
-        for row in rows:
+        for row in cur:
             i+=1
             if "apple" in row[1].lower():
                 f = fapple
