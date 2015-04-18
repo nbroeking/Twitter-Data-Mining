@@ -24,6 +24,16 @@ import time
 import json
 import ast
 
+#Used to Iterate the cursor
+def ResultIter(cursor, arraysize=1000):
+    'An iterator that uses fetchmany to keep memory usage down'
+    while True:
+        results = cursor.fetchmany(arraysize)
+        if not results:
+            break
+        for result in results:
+            yield result
+
 #Globals
 word_features = []
 
@@ -76,9 +86,9 @@ def train():
                 elif word.isalnum() and not len(word) < 3:
                     newtext.append(word)
             tup = (newtext, 'pos' if int(line[1]) else 'neg')
-            if i < 1000:
+            if i < 10:
                 trainingdata.append(tup)
-            elif i < 10000:
+            elif i < 100:
                 testingdata.append(tup)
             else:
                 break
@@ -99,26 +109,23 @@ def train():
     print("Accuracy:")
     testing_set = nltk.classify.util.apply_features(extract_features, testingdata)
     print(nltk.classify.accuracy(classifier, testing_set))
-    sys.exit(0)
     return classifier
 
 def convertDatabase(classifier):
+    fapple = open('results/apple.csv','w')
+    google = open('results/google.csv','w')
+    samsung = open('results/samsung.csv','w')
+    amazon = open('results/amazon.csv', 'w')
+ 
     try:
         con = lite.connect(sys.argv[1])
     
         cur = con.cursor()    
-        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id;');
+        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id LIMIT 10;');
    
-
-        print("Pulled %d rows" % len(rows))
-        fapple = open('results/apple.csv','w')
-        google = open('results/google.csv','w')
-        samsung = open('results/samsung.csv','w')
-        amazon = open('results/amazon.csv', 'w')
-    
         f = fapple
         i = 0;
-        for row in cur:
+        for row in ResultIter(cur):
             i+=1
             if "apple" in row[1].lower():
                 f = fapple
