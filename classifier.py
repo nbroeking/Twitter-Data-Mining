@@ -24,6 +24,80 @@ import time
 import json
 import ast
 
+#We need regular expressions
+import re
+
+#Globals
+word_features = []
+stopWords = []
+
+#start replaceTwoOrMore
+def replaceTwoOrMore(s):
+    #look for 2 or more repetitions of character and replace with the character itself
+    pattern = re.compile(r"(.)\1{1,}", re.DOTALL)
+    return pattern.sub(r"\1\1", s)
+
+#start getStopWordList
+def getStopWordList():
+    #read the stopwords file and build a list
+    stopWords = []
+    stopWords.append('AT_USER')
+    stopWords.append('URL')
+
+    fp = open("stopwords.txt", 'r')
+    line = fp.readline()
+    while line:
+        word = line.strip()
+        stopWords.append(word)
+        line = fp.readline()
+    fp.close()
+    return stopWords
+
+
+stopWords = getStopWordList()
+
+#start getfeatureVector
+def getFeatureVector(tweet):
+    featureVector = []
+    #split tweet into words
+    words = tweet.split()
+    for w in words:
+
+        #replace two or more with two occurrences
+        #We want to keep repeted letters because people use it to show emphasis
+        w = replaceTwoOrMore(w)
+
+        #strip punctuation from the tweets
+        w = w.strip('\'"?,.')
+
+        #check if the word starts with an alphabet
+        val = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", w)
+
+        #ignore if it is a stop word
+        if(w in stopWords or val is None):
+            continue
+        else:
+            featureVector.append(w.lower())
+
+    return featureVector
+
+#Preprocess the tweet
+def PreprocessTweet(tweet):
+    #Convert to lower case
+    tweet = tweet.lower()
+    #Convert www.* or https?://* to URL
+    tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))','URL',tweet)
+    #Convert @username to AT_USER
+    tweet = re.sub('@[^\s]+','USER',tweet)
+    #Remove additional white spaces
+    tweet = re.sub('[\s]+', ' ', tweet)
+    #Replace hashtag with the word
+    tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+    #trim
+    tweet = tweet.strip('\'"')
+
+    return tweet
+
 #Used to Iterate the cursor
 def ResultIter(cursor, arraysize=1000):
     'An iterator that uses fetchmany to keep memory usage down'
@@ -34,30 +108,14 @@ def ResultIter(cursor, arraysize=1000):
         for result in results:
             yield result
 
-#Globals
-word_features = []
-
-#Feature Extration
-def get_letters(tweets):
-    features = []
-    for (words, sentiment) in tweets:    
-        features.extend(words)
-    return features
-
-#getFeatures
-def get_features(wordlist):
+#start extract_features
+def extractFeatures(tweet):
     global word_features
-    wordlist = nltk.FreqDist(wordlist)
-    word_features = wordlist.keys()
-    return word_features
-
-#extract the features from the feture list
-def extract_features(document):
-    global word_features
-    document_words = set(document)
+    words = set(tweet)
     features = {}
     for word in word_features:
-        features['contains(%s)' % word] = (word in document_words)
+        features['contains(%s)' % word] = (word in words)
+
     return features
 
 #Train the classifier
@@ -74,40 +132,41 @@ def train():
     for x in lines:
         i+=1;
         line = x.split(",")
+
+        #If we have a good formed data string
         if len(line) is 4:
-            text = line[3].split()
-            #Process the text
-            newtext = []
-            for word in text:
-                if '@' in word:
-                    newtext.append( 'TAG')
-                elif 'http' in word:
-                    newtext.append('URL')
-                elif word.isalnum() and not len(word) < 3:
-                    newtext.append(word)
-            tup = (newtext, 'pos' if int(line[1]) else 'neg')
-            if i < 10:
+
+            text = PreprocessTweet(line[3])
+            featureVec = getFeatureVector(text)
+
+            word_features.extend(featureVec)
+
+            tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
+
+            if i < 300:
                 trainingdata.append(tup)
-            elif i < 100:
+            elif i < 500:
                 testingdata.append(tup)
             else:
                 break
 
-
     print('  Performing Feature extraction')
     #Feature extraction
-    word_features = get_features(get_letters(trainingdata))
 
+    #We want to remove duplicates
+    word_features = list(set(word_features))
 
     print('  Applying the features to the classifer')
     #Feature application
 
-    training_set = nltk.classify.util.apply_features(extract_features, trainingdata)
-
+    training_set = nltk.classify.util.apply_features(extractFeatures, trainingdata)
     classifier = nltk.NaiveBayesClassifier.train(training_set)
 
+    print('   Applying features to testing data')
+
+    testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
+
     print("Accuracy:")
-    testing_set = nltk.classify.util.apply_features(extract_features, testingdata)
     print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
@@ -138,7 +197,7 @@ def convertDatabase(classifier):
             if "amazon" in row[1].lower():
                 f = amazon
 
-            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extract_features(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
+            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extractFeatures(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
 
             if i %100 == 0:
                 print (i)
@@ -173,6 +232,12 @@ if __name__ == '__main__':
 
     #Clasifying the database text
     print ("Classifying the database")
-    convertDatabase(classifier);
+    #convertDatabase(classifier);
+
+    print('Enter Sentences')
+    while True:
+        userinput = sys.stdin.readline()
+        print (classifier.classify(extractFeatures(userinput)))
+
 
     print ("Difference is %d" % ((datetime.datetime.now() - start).seconds))
