@@ -114,13 +114,17 @@ def extractFeatures(tweet):
     words = set(tweet)
     features = {}
     for word in word_features:
-        features['contains(%s)' % word] = (word in words)
-
+        #features['contains(%s)' % word] = (word in words)
+        features[word] = word in tweet
+    #print('Extract Features')
+    #print( features )
+    #print('\n\n')
     return features
 
 #Train the classifier
 def train():
     global word_features
+
     f = open('training.csv')
     lines = f.read().splitlines()
     
@@ -129,8 +133,8 @@ def train():
     trainingdata = []
     testingdata = []
     i = 0
+    needPos = True
     for x in lines:
-        i+=1;
         line = x.split(",")
 
         #If we have a good formed data string
@@ -142,13 +146,31 @@ def train():
             word_features.extend(featureVec)
 
             tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
+            
+            if i <= 13000:
+                if( needPos and tup[1] == 'pos'):
+                    trainingdata.append(tup)
+                    needPos = False
+                    i+=1;
 
-            if i < 300:
-                trainingdata.append(tup)
-            elif i < 500:
-                testingdata.append(tup)
+                if( (needPos is False) and tup[1] == 'neg'):
+                    trainingdata.append(tup)
+                    needPos = True         
+                    i+=1;
+
+            elif i <= 20000:
+                if( needPos and tup[1] == 'pos'):
+                    testingdata.append(tup)
+                    needPos = False
+                    i+=1;
+
+                if( (needPos is False) and tup[1] == 'neg'):
+                    testingdata.append(tup)
+                    needPos = True         
+                    i+=1;
             else:
                 break
+
 
     print('  Performing Feature extraction')
     #Feature extraction
@@ -168,6 +190,7 @@ def train():
 
     print("Accuracy:")
     print(nltk.classify.accuracy(classifier, testing_set))
+    #print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
 def convertDatabase(classifier):
@@ -197,7 +220,7 @@ def convertDatabase(classifier):
             if "amazon" in row[1].lower():
                 f = amazon
 
-            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extractFeatures(row[1].split())), row[2], row[3], row[4], row[5], row[6])) 
+            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(row[1])))), row[2], row[3], row[4], row[5], row[6])) 
 
             if i %100 == 0:
                 print (i)
@@ -232,12 +255,12 @@ if __name__ == '__main__':
 
     #Clasifying the database text
     print ("Classifying the database")
-    #convertDatabase(classifier);
+    convertDatabase(classifier);
 
-    print('Enter Sentences')
-    while True:
-        userinput = sys.stdin.readline()
-        print (classifier.classify(extractFeatures(userinput)))
+#    print('Enter Sentences')
+ #   while True:
+  #      userinput = sys.stdin.readline()
+   #     print (classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(userinput)))))
 
 
     print ("Difference is %d" % ((datetime.datetime.now() - start).seconds))
