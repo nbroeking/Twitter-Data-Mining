@@ -186,10 +186,10 @@ def train():
 
     print('   Applying features to testing data')
 
-    testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
+    #testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
 
-    print("Accuracy:")
-    print(nltk.classify.accuracy(classifier, testing_set))
+   # print("Accuracy:")
+    #print(nltk.classify.accuracy(classifier, testing_set))
     #print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
@@ -203,7 +203,7 @@ def convertDatabase(classifier):
         con = lite.connect(sys.argv[1])
     
         cur = con.cursor()    
-        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id LIMIT 10;');
+        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id;');
    
         f = fapple
         i = 0;
