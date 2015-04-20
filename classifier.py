@@ -155,7 +155,7 @@ def train():
 
             tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
             
-            if i <= 13000:
+            if i <= 20000:
                 if( needPos and tup[1] == 'pos'):
                     trainingdata.append(tup)
                     needPos = False
@@ -166,7 +166,7 @@ def train():
                     needPos = True         
                     i+=1;
 
-            elif i <= 20000:
+            elif i <= 100000:
                 if( needPos and tup[1] == 'pos'):
                     testingdata.append(tup)
                     needPos = False
@@ -191,10 +191,10 @@ def train():
 
     print('   Applying features to testing data')
 
-    #testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
+    testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
 
-   # print("Accuracy:")
-    #print(nltk.classify.accuracy(classifier, testing_set))
+    print("Accuracy:")
+    print(nltk.classify.accuracy(classifier, testing_set))
     #print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
@@ -262,10 +262,10 @@ if __name__ == '__main__':
     print ("Classifying the database")
     convertDatabase(classifier);
 
-#    print('Enter Sentences')
- #   while True:
-  #      userinput = sys.stdin.readline()
-   #     print (classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(userinput)))))
+    #print('Enter Sentences')
+    #while True:
+     #   userinput = sys.stdin.readline()
+      #  print (classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(userinput)))))
 
 
     print ("Difference is %d" % ((datetime.datetime.now() - start).seconds))
