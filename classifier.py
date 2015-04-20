@@ -28,7 +28,7 @@ import ast
 import re
 
 #Globals
-word_features = []
+word_features = set()
 stopWords = []
 
 #start replaceTwoOrMore
@@ -110,15 +110,23 @@ def ResultIter(cursor, arraysize=1000):
 
 #start extract_features
 def extractFeatures(tweet):
-    global word_features
-    words = set(tweet)
-    features = {}
-    for word in word_features:
-        #features['contains(%s)' % word] = (word in words)
-        features[word] = word in tweet
-    #print('Extract Features')
-    #print( features )
-    #print('\n\n')
+
+    if not isinstance(tweet, list):
+        tweet = tweet.split(' ')
+
+    class default_dict(dict):
+        def __init__(self):
+            super(default_dict, self).__init__()
+        
+        def __getitem__(self, k):
+            self.get(k, False)
+
+    features = default_dict()
+
+    for word in tweet:
+        if word in word_features:
+            features[word] = True
+
     return features
 
 #Train the classifier
@@ -143,7 +151,7 @@ def train():
             text = PreprocessTweet(line[3])
             featureVec = getFeatureVector(text)
 
-            word_features.extend(featureVec)
+            word_features.update(featureVec)
 
             tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
             
@@ -174,9 +182,6 @@ def train():
 
     print('  Performing Feature extraction')
     #Feature extraction
-
-    #We want to remove duplicates
-    word_features = list(set(word_features))
 
     print('  Applying the features to the classifer')
     #Feature application
