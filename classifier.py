@@ -203,7 +203,7 @@ def convertDatabase(classifier):
         con = lite.connect(sys.argv[1])
     
         cur = con.cursor()    
-        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id LIMIT 10;');
+        cur.execute('SELECT Tweets.id, text, retweeted, retweeted_count, time, followers_count, friendcount from Tweets LEFT JOIN Users on Tweets.userid == Users.userid group by Tweets.id;');
    
         f = fapple
         i = 0;
