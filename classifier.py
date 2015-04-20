@@ -158,7 +158,7 @@ def train():
                     needPos = True         
                     i+=1;
 
-            elif i <= 14000:
+            elif i <= 20000:
                 if( needPos and tup[1] == 'pos'):
                     testingdata.append(tup)
                     needPos = False
