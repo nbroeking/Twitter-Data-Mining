@@ -186,10 +186,10 @@ def train():
 
     print('   Applying features to testing data')
 
-    testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
+    #testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
 
-    print("Accuracy:")
-    print(nltk.classify.accuracy(classifier, testing_set))
+   # print("Accuracy:")
+    #print(nltk.classify.accuracy(classifier, testing_set))
     #print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
