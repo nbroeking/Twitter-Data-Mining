@@ -30,10 +30,17 @@ consumer_secret="tyeyRqSJkHrUjec2sdO5tiIJeMb5Sk5OZVySeN9CIEoXOFcvtn"
 access_token="52314456-zHY3UfyiQ6KVrWrgMLy4nGmPzInaFmxsZVXhKCHfO"
 access_token_secret="zYsjeIH7TKxeJnHxVHwg3HVUynu4JZgKLvfhsUR0Hn7Qh"
 
+import socket
+
+broadcast_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+broadcast_sock.bind(('127.0.0.1', 5483)) # this should only listen on localhost
+
+to_addr = ('127.0.0.1', 5551)
 
 #Listen for tweets
 class TweetListener(StreamListener):
     def __init__(self):
+        
         self.db = sqlite3.connect('Twitter.db')
         cursor = self.db.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS Tweets(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, retweeted BOOL, retweeted_count INT, time TEXT, userid INT, tweetId INT)''')
@@ -41,6 +48,7 @@ class TweetListener(StreamListener):
         self.db.commit()
 
     def on_data(self, data):
+        broadcast_sock.sendto(data, to_addr)
         d = json.loads(data.strip())
         try:
             if d['lang'] == "en":	
