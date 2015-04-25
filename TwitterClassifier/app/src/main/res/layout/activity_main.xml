@@ -3,7 +3,9 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:background="@drawable/background">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -14,38 +16,44 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/title"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Amazon Sentiment: "
-        android:height="75dp"
+        android:text="Amazon : "
+        android:height="90dp"
+        android:width="90dp"
         android:gravity="center"
         android:id="@+id/textView"
-        android:layout_above="@+id/textView2"
+        android:layout_below="@+id/imageView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/apple"
+        android:layout_toStartOf="@+id/apple" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Apple Sentiment: "
-        android:height="75dp"
+        android:text="Apple : "
+        android:height="90dp"
         android:gravity="center"
         android:id="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Google Sentiment: "
-        android:height="75dp"
+        android:text="Google : "
+        android:height="90dp"
         android:gravity="center"
         android:id="@+id/textView3"
         android:layout_below="@+id/textView2"
@@ -56,8 +64,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Samsung Sentiment: "
-        android:height="75dp"
+        android:text="Samsung : "
+        android:height="90dp"
         android:gravity="center"
         android:id="@+id/textView4"
         android:layout_below="@+id/textView3"
@@ -65,44 +73,43 @@
         android:layout_alignParentStart="true" />
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_alignBottom="@+id/textView"
-        android:layout_alignRight="@+id/imageView"
-        android:layout_alignEnd="@+id/imageView" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView3"
-        android:layout_below="@+id/imageView2"
-        android:layout_alignLeft="@+id/imageView2"
-        android:layout_alignStart="@+id/imageView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignRight="@+id/imageView2"
-        android:layout_alignEnd="@+id/imageView2" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView4"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_alignLeft="@+id/imageView3"
-        android:layout_alignStart="@+id/imageView3"
-        android:layout_above="@+id/textView4"
-        android:layout_alignRight="@+id/imageView3"
-        android:layout_alignEnd="@+id/imageView3" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView5"
-        android:layout_below="@+id/imageView4"
-        android:layout_toRightOf="@+id/textView4"
+        android:id="@+id/samsung"
         android:layout_alignBottom="@+id/textView4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-</R>
+        android:layout_alignTop="@+id/textView4"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/google"
+        android:layout_above="@+id/samsung"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_alignRight="@+id/samsung"
+        android:layout_alignEnd="@+id/samsung" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/apple"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4"
+        android:layout_alignBottom="@+id/textView2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/amazon"
+        android:layout_below="@+id/imageView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_alignLeft="@+id/apple"
+        android:layout_alignStart="@+id/apple" />;
+
+</RelativeLayout>
