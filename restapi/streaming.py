@@ -23,6 +23,8 @@ from tweepy import Stream
 import json
 import ast
 
+from classifier import extractFeatures, getFeatureVector, PreprocessTweet, train
+
 # Consumer Keys
 consumer_key="44vVVicDrIDrA9iJ6FHCUA0TB"
 consumer_secret="tyeyRqSJkHrUjec2sdO5tiIJeMb5Sk5OZVySeN9CIEoXOFcvtn"
@@ -47,8 +49,18 @@ class TweetListener(StreamListener):
         cursor.execute('''CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, userid INT, followers_count INT, friendcount INT, name TEXT)''')
         self.db.commit()
 
+        self.classifier = train()
+
     def on_data(self, data):
-        broadcast_sock.sendto(data, to_addr)
+        json_data = json.loads(data)
+        text = json_data["text"]
+        clazz = self.classifier.classify(
+                    extractFeatures(
+                        getFeatureVector(
+                            PreprocessTweet(text)
+                            )))
+
+        broadcast_sock.sendto(json.dumps({'text': text, 'sentiment': clazz}), to_addr)
         d = json.loads(data.strip())
         try:
             if d['lang'] == "en":	
