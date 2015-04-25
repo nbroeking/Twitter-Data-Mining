@@ -155,7 +155,7 @@ def train():
 
             tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
             
-            if i <= 20000:
+            if i <= 10000:
                 if( needPos and tup[1] == 'pos'):
                     trainingdata.append(tup)
                     needPos = False

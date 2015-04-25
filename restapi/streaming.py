@@ -53,36 +53,21 @@ class TweetListener(StreamListener):
 
     def on_data(self, data):
         json_data = json.loads(data)
-        text = json_data["text"]
-        clazz = self.classifier.classify(
-                    extractFeatures(
-                        getFeatureVector(
-                            PreprocessTweet(text)
-                            )))
+	if "text" in json_data:
+            text = json_data["text"]
+            clazz = self.classifier.classify(
+                        extractFeatures(
+                            getFeatureVector(
+                                PreprocessTweet(text)
+                                )))
 
-        broadcast_sock.sendto(json.dumps({'text': text, 'sentiment': clazz}), to_addr)
-        d = json.loads(data.strip())
-        try:
-            if d['lang'] == "en":	
-                cursor = self.db.cursor()
-            
-                cursor.execute('INSERT INTO Tweets( text, retweeted, retweeted_count, time, userid, tweetId) VALUES(?,?,?,?,?,?)', [d['text'], bool(d['retweeted']), int(d['retweet_count']), d['created_at'], int(d['user']['id']), int( d['id'])])
-                cursor.execute('INSERT INTO Users( userID, followers_count, friendcount, name) VALUES (?,?,?,?)', [d['user']['id'], d['user']['followers_count'], d['user']['friends_count'], d['user']['name']])
-            
-                self.db.commit()
-                return True
-        except: # catch *all* exceptions
-            e = sys.exc_info()[0]
-            print( e )
-
-    def on_error(self, status):
-        print(status)
+            broadcast_sock.sendto(json.dumps({'text': text, 'sentiment': clazz}), to_addr)
 
 #Main Function
 if __name__ == '__main__':
     while True:
+        l = TweetListener()
         try:
-            l = TweetListener()
             auth = OAuthHandler(consumer_key, consumer_secret)
             auth.set_access_token(access_token, access_token_secret)
            
@@ -90,6 +75,4 @@ if __name__ == '__main__':
             stream.filter(track=['google', 'apple', 'oracle','amazon', 'IBM', 'Google', 'Apple', 'Oracle', 'Amazon', 'ibm', 'Shell', 'shell' ])
 
         except:
-            e = sys.exc_info()[0]
-            print( e)
-
+	    print ("There was an exception")
