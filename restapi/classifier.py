@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/pypy
 
 #Future
 from __future__ import absolute_import, print_function
@@ -193,8 +193,8 @@ def train():
 
     testing_set = nltk.classify.util.apply_features(extractFeatures, testingdata)
 
-    print("Accuracy:")
-    print(nltk.classify.accuracy(classifier, testing_set))
+    # print("Accuracy:")
+    # print(nltk.classify.accuracy(classifier, testing_set))
     #print(nltk.classify.accuracy(classifier, testing_set))
     return classifier
 
@@ -248,24 +248,19 @@ def convertDatabase(classifier):
 
 #Main Function
 if __name__ == '__main__':
-    
-    if len(sys.argv) != 2:
-        print("Error: Usage");
-        exit(0)
     #Training the data
     print ("Training the Classifier")
+    sys.stdout.flush()
 
     start = datetime.datetime.now()
     classifier = train()
 
-    #Clasifying the database text
-    print ("Classifying the database")
-    convertDatabase(classifier);
-
-    #print('Enter Sentences')
-    #while True:
-     #   userinput = sys.stdin.readline()
-      #  print (classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(userinput)))))
+    print('Enter Sentences')
+    sys.stdout.flush()
+    while True:
+       userinput = sys.stdin.readline()
+       print (classifier.classify(extractFeatures(getFeatureVector(PreprocessTweet(userinput)))))
+       sys.stdout.flush()
 
 
     print ("Difference is %d" % ((datetime.datetime.now() - start).seconds))
