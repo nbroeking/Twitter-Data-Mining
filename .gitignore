@@ -14,8 +14,6 @@ log
 #Database
 *.db
 
-#training
-training.csv
 
 #Librarys
 tweepy
