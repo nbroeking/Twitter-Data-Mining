@@ -1,7 +1,7 @@
 \documentclass{acm_proc_article-sp}
 
 \usepackage{lipsum}
-
+\usepackage{listings}
 \usepackage{minted}
 
 \title{Predicting Stock Trends using Twitter Sentiment}
@@ -106,7 +106,10 @@ This phase our project easily took the most time and effort. We attempted to
 build the most accurate classifier and experimented with different types of
 feature vectors. We discovered classifying on words yielded the best results.
 
-Once we has the sentiment for each tweet we ran multiple tests to determine the correlation. TODO ANNAS STUFF 
+Once we had the sentiment for each tweet we ran multiple tests to determine the correlation. 
+The tests were mostly based off a linear regression model fitted to the data with Ordinary 
+Least Squares estimators. The model was not at all adequate, but allowed us to perform 
+many conslusive statistical tests for correlation including a t-test and $R^2$ value examination. 
 
 Once we determined that there was no correlation we had to decided what our
 next step was. We were hoping to find a correlation but because we determined
@@ -292,7 +295,58 @@ that are proven to have no sentiment value but will sway the classifier. The com
 of all these steps brought us to our final pre processor.
 
 \subsubsection{Stock Preprocessing}
+ 
+ The last step in pre-processing, after sentiment analysis was performed on the tweets,
+ was to combine the twitter data with the stock data. Since the two came from very different 
+ sources and in different formats work had to be done before they could be combined for correlation
+ analaysis. The goal was to calculate the change in stock value from day $n$ to day $n+1$ 
+ and pair it with the percent of positive tweets on day $n$, This proved to be not straightforward
+ due to the fact that there were arbitrary sized missing blocks of days in the twitter data, as well
+ as no stock data on weekends. A day of twitter data had to be thrown out if there
+ wasn't stock values available for that day and the preceding, and stock values had to be 
+ thrown out if their wasn't the appropriate twitter and additional stock data to go along 
+ with it. A function to determine weather or not two days are one day appart aided alot in the pre-processing:
+ \begin{lstlisting}
 
+one.day <- function(date1,date2) {
+
+  daysPerMonth <- c(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+       
+      month1 <- as.numeric(date1[2])
+      day1<- as.numeric(date1[3])
+
+      month2 <- as.numeric(date2[2])
+    day2 <- as.numeric(date2[3])
+
+    if (abs(month2 - month1) > 1){
+        return (0)
+        }
+
+    if(month1 == month2){
+        if(abs(day2-day1) > 1){
+            return (0)
+              }
+        else{
+            return (1)
+             }
+       }
+    lastDayMonth1 = daysPerMonth[month1]
+    lastDayMonth2 = daysPerMonth[month2]
+
+    if(day1 == lastDayMonth1 && day2 == 1){
+        return (1)
+         }
+    if(day2 == lastDayMonth2 && day1 == 1){
+        return (1)
+        }
+
+    return (0)
+
+}
+
+ \end{lstlisting}
+After the stock and twitter data was converted to the same format and re-orginazed into consecutive 
+days the correlation analysis could begin. 
 
 \subsection{Sentiment Analysis}
 
