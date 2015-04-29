@@ -288,29 +288,37 @@ this we also changed all the characters to lowercase, changed any username to
 AT\_USER, removed additional white space, and stripped any punctuation. The
 code for these two steps is shown below.
 
+\break
 \inputminted{python}{examples/preTweet.py}
 
-After these two steps we also filtered out any stop words. Stop words are a list of words
-that are proven to have no sentiment value but will sway the classifier. The combination
-of all these steps brought us to our final pre processor.
+After these two steps we also filtered out any stop words. Stop words are a
+list of words that are proven to have no sentiment value but will sway the
+classifier. The combination of all these steps brought us to our final pre
+processor.
 
 \subsubsection{Stock Preprocessing}
  
- The last step in pre-processing, after sentiment analysis was performed on the tweets,
- was to combine the twitter data with the stock data. Since the two came from very different 
- sources and in different formats work had to be done before they could be combined for correlation
- analaysis. The goal was to calculate the change in stock value from day $n$ to day $n+1$ 
- and pair it with the percent of positive tweets on day $n$, This proved to be not straightforward
- due to the fact that there were arbitrary sized missing blocks of days in the twitter data, as well
- as no stock data on weekends. A day of twitter data had to be thrown out if there
- wasn't stock values available for that day and the preceding, and stock values had to be 
- thrown out if their wasn't the appropriate twitter and additional stock data to go along 
- with it. A function to determine weather or not two days are one day appart aided alot in the pre-processing:
- \begin{lstlisting}
+ The last step in pre-processing, after sentiment analysis was performed on the
+tweets, was to combine the twitter data with the stock data. Since the two came
+from very different sources and in different formats work had to be done before
+they could be combined for correlation analaysis. The goal was to calculate the
+change in stock value from day $n$ to day $n+1$ and pair it with the percent of
+positive tweets on day $n$, This proved to be not straightforward due to the
+fact that there were arbitrary sized missing blocks of days in the twitter
+data, as well as no stock data on weekends. A day of twitter data had to be
+thrown out if there wasn't stock values available for that day and the
+preceding, and stock values had to be thrown out if their wasn't the
+appropriate twitter and additional stock data to go along with it. A function
+to determine weather or not two days are one day appart aided alot in the
+pre-processing:
 
+\break 
+\begin{minted}{R}
 one.day <- function(date1,date2) {
 
-  daysPerMonth <- c(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+  daysPerMonth <- c(0, 31, 28, 31, 30, 31, 
+                    30, 31, 31, 30, 31, 30, 
+                    31)
        
       month1 <- as.numeric(date1[2])
       day1<- as.numeric(date1[3])
@@ -344,9 +352,10 @@ one.day <- function(date1,date2) {
 
 }
 
- \end{lstlisting}
-After the stock and twitter data was converted to the same format and re-orginazed into consecutive 
-days the correlation analysis could begin. 
+\end{minted}
+
+After the stock and twitter data was converted to the same format and
+re-orginazed into consecutive days the correlation analysis could begin. 
 
 \subsection{Sentiment Analysis}
 
@@ -380,11 +389,43 @@ As apart of the new steps we also improved the training data that we fed to the 
 We made sure to have the same amount of positive tweets as negative tweets and we
 applied the new pre processing steps. In our final version our training looked like below.
 
+\break
 \inputminted{python}{examples/train.py}
 
 The new feature extractor worked really well with an accuracy at about 64\% 
-but still wasn't as good as we wanted. We realized the problem was most likley
-with the slowness of our code. We then spend the next week attempting to optim
+but still wasn't as good as we wanted. We realized the problem was most likely
+with the slowness of our code. We then spend the next week attempting to 
+optimize it even further. We started by using sets instead of lists and then using these
+sets to reverse how we were determining the feature vector. By iterating on the tweets
+instead of the feature vector and by using a dictionary with default values we were
+able to speed up the performance of our code by about 1000 times. At the midway demo
+we were processing about 5 to 10 tweets a second. After our optimizations we started
+classifying over 4000 tweets per second. This brought our runtime from about $O((nm)^2)$ 
+where n is the number of tweets and m is the words in each tweet, to $O(nm)$ These 
+optimizations then allowed us
+to train on 15000 tweets instead of just 5000. This extra volume of training jumped our
+accuracy up to about 90\%. This was a huge success in the project because the 
+jump in accuracy allows for us to find the correlation with a much higher accuracy. 
+
+When we brought our classifier to the full dataset we ran into one more problem. 
+Previously when we were running our classifier we did it on such a small database that we 
+could fit it all into memory. However, when we stepped up the the full dataset the operating
+system would start killing our process for using so much memory. This led to the last
+optimization we had to do on our classifier. We used a generator on the SQLite database
+to only return 1000 stored tweets at a time, shown below. These optimizations dramatically 
+increased the effectiveness of our classification step.
+
+\inputminted{python}{examples/generator.py}
+
+The final piece of our classifier was putting it all together. After training our classifier
+we needed to read all of the stored tweets from the database and export them 
+to a comma separated list for the Correlation analysis. To do this step we had a
+function that read from the database and echoed the tweet into the correct company bin.
+
+\inputminted{python}{examples/converter.py}
+
+This classifier was able to sort all of our 10 gb of tweet data into the separate company bins
+in about 10 hours using 3 different processes. 
 
 \subsection{Correlation Analysis}
 
