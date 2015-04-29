@@ -2,7 +2,7 @@
 
 \usepackage{lipsum}
 
-\title{Predicting Stock Trends using Twitter Data}
+\title{Predicting Stock Trends using Twitter Sentiment}
 \author{
     Nicolas Broeking \\
     \small Department of Computer Science \\
@@ -39,8 +39,11 @@ specific permission..  Copyright 2015 Broeking, Rahm, Hoffee}
 With social media on the rise, the amount of data available for processing is
 growing at an increasing rate. It is an advanced area of research to be able to
 use that data to predict or better understand the world around us. In our
-project we attemptedto use Twitter to determine if, and how strong of, a
-relationship exists between public sentiment and chosen stock values.
+project we attempted to discover a relationship between twitter sentiment and 
+stock values the next day. Unfortunately, we failed at determining a relationship
+but we have conclusive evidence that a relationship does not exist. The project
+was not a total failure. We were able to create a realtime sentiment engine that
+allows our mobile application to get real time sentiment analysis.
 
 \end{abstract}
 
@@ -60,7 +63,7 @@ Social Networks, Trends, Blogging, Tweets, Hashtag, Twitter, Stock
 
 To determine if there is a relationship between the sentiment of tweets and the
 change in stock price for the next day. Then to create a user friendly mobile
-application to display real time stock predictions.
+application to display real time sentiment analysis.
 
 \section{Introduction}
 
@@ -71,48 +74,42 @@ day. These tweets can be analyzed to determine future market values. For the
 purposes of this project we looked at four companies, Amazon, Apple, Google,
 and Samsung. 
 
-The first step is to open a connection to the twitter streaming api. Using this
+The first step was to collect data. To do this we had to gather information from two sources, Twitter, and Yahoo.
+Twitter allowed us to open a connection to the streaming api. Using this
 api we receive anywhere between 1\% and 40\% of all the tweets being tweeted.
-This percentage depends on the current Twitter load. In addition to collecting
-twitter data we also collected historical stock data to compare against the
-twitter data.
+This percentage depends on the current Twitter load and how many things we are 
+filtering on. Once we received a tweet we would store it in a database for latter processing.
+In addition to collecting twitter data we also collected historical stock data. Yahoo provides
+historical stock data for companies going back many years. Once we collected all our tweets
+we gathered the stock data for the same intervals of time.
 
-The next phase in our pipeline is the data storage step. We are using sqlite3 as
-our database to store all of our tweets. Each tweet stores information
-related to the user and the tweet to determine possible variables to match
-against for the statistical analysis.
-
-The third phase is to pre-process the data. Before we perform sentiment
-analysis on the tweets we need to filter based on language. We only accept
-tweets that are English and have no images or videos. Once we have our English
-tweets we start categorizing the tweets. We separate each tweet into four
-different bins, one for each company. We then change all URLs to URL and all
-hash tags to TAG. This allows us to use these as features for the sentiment
-analysis. 
+Once we had all the data we had to pre-process it before we could do any analysis. Each data
+set needed to be pre-processed in order to perform efficient analysis on the data. For Twitter we had to
+filter each tweet and remove all unnecessary words. We needed to try and strip down the information as
+much as possible or else the classifier would become unreasonable slow. The stock data was another 
+challenge all together. Because the tweets were not received on a constant time bases we had to filter all
+the stock data to match up correctly with tweets. 
 
 The fourth phase is our sentiment analysis phase. We use a naive Bayesian
-classifier to detect whether a tweet is positive. Once we have applyed our
-sentiment analysis to the data send it to our next stage.
+classifier to detect whether a tweet is positive. In order to do this we classify on words found to be influential by the classifier. We train on a training set gathered from multiple universities and compile them into a list of pairs including the original text and the sentiment.
 
-We are currently working to implement this phase. We are taking the data and
-trying to detemine a relationship between the sentiment and a change in the
-stock price.
-
-Our next step is to determine the realtionship between the variables and then
-implemnt a mobile application that recomends which company to invest in. 
 
 \section{Authors}
 
 The authors of this proposal are Nicolas Broeking, Anna
 Hoffee, and Joshua Rahm. Broeking and Rahm are graduate students at the
 University of Colorado at Boulder. Hoffee is a undergraduate student at the
-University of Colorado. Nicolas Broeking has worked on embedded systems and
-mobile applications for the past four years. He would like to take the results
-from the project and create a user friendly application that allows a user to
-easily interact with the data and make financial predictions.  Josh Rahm has
-spent his career working with embedded devices, cellular technologies and
-billing platforms, and is interested in applying data mining concepts to
-markets.  
+University of Colorado.
+
+ Nicolas Broeking has worked on embedded systems and
+mobile applications for the past four years. Broeking's contributions were in the data collection, preprocessing,
+sentiment analysis, optimizations, and creation of the mobile application. 
+
+Josh Rahm has spent his career working with embedded devices, cellular technologies and billing platforms. Rahm contributions were with sentiment analysis, optimizations, and converting the tools to be used in a real time system on the server. He created a Rest Api that allows the mobile app to get
+the real time.
+
+Anna Hoffee is a student in the mathematics department. She has spent her career working on similar projects attempting to find
+patterns in other live data sets. Hoffee contributed by taking the sentiment data and determining that there was no correlation.
 
 \section{Motivation}
 
@@ -121,12 +118,16 @@ In a world where a 15\% increase is assets per year is massive,  even the
 ability to increase certainty in the market by a few percent is a huge.
 Companies and individuals can harness this technology make billions and secure
 investments, producing and saving billions for the economy. While making
-billions is outside the scope of this project, we think it is possible to
+billions is outside the scope of this project, we thought it was possible to
 significantly increase the accuracy of stock predictions. We know that public
 image is critical to stock value. If a company's image drastically decreases
-then we predict that its stock value will change. It is our goal to discover
-how the company's public image, determined through Twitter, will affect its
-stock price and then to create an application that recomends stocks for a user.
+then we predicted that its stock value will change. This ended up to be an incorrect prediction
+and we were able to show that there exists no correlation between twitter sentiment and changes in stock value.
+
+Even with this failure we still have motivation for sentiment analysis. Companies still
+have an interest in a positive public image. We can use the tools that we create to provide
+a way for companies to get real time sentiment analysis to their phones. 
+
 
 \section{Literature Survey}
 
@@ -141,14 +142,16 @@ the stock price. This project looked for other things than just stock trends
 though. They wanted to find relationships between the data and how much a stock
 will change, and what the values of the stock will be. They determined that the
 most reliable way to determine the information is by looking at the number of
-edges in the graph.[1] 
+edges in the graph. However, even in this case however they were not able to find a reliable correlation.[1] 
 
 Another team, Twitter Mood Predicts the Stock Market, attempted to determine
-how twitter ‚Äúmood‚Äù effects the stock price. They grouped tweets into 6
+how twitter moodÄù effects the stock price. They grouped tweets into 6
 dimensions Calm, Alert, Sure, Vital, Kind, and Happy. They then took these
 categories and created a relationship between to the closing value of the Dow
 Jones. They found that there is a correlation between what people are posting
-and how the stock market as a whole performs. [2] 
+and how the stock market as a whole performs. They were not able to determine
+though any relationship between what people are posting and specific companies
+stock. [2] 
 
 Many other studies have been done similar to the first two on how to use
 twitter to predict stock prices. The one thing that has been determined for
@@ -158,10 +161,26 @@ value when people started tweeting about the flu spreading on one of its
 cruises. Researchers were able to predict the drop in price 48 minutes before
 the stock plunged about 3\%.[3]
 
+Once we found information regarding other studies that have been done in
+sentiment analysis and stock price correlation we started looking into the best
+ways to do sentiment analysis. After the midway presentation we were not happy
+with our accuracies. We talked with Jamie Wood from Waylin. Waylin
+specializes in performing sentiment analysis at an industrial scale. Sentiment
+analysis on twitter data is a very challenging task because tweets are a form
+of natural language. Mr. Wood advised us that a 65\% accuracy is something that
+is considered to be a good analyzer and any point upwards of that is a great
+classification. Using this information we set a goal to achieve an accuracy upwards of 65%
+
 \section{Tasks}
-In order to achive this task we split our project up into 7 tasks.
+
+In order to successfully find a correlation and then to create an application we split our project into
+ten different sub tasks. These tasks, listed below, allowed us to split the workload among the group and to 
+ensure that we stayed on a schedule for a successful project.
 
 \subsection{Data Collection} 
+
+To collect all of the data that we needed we needed to get it from two sources. First we had to get
+a decent volume of tweets to perform the sentiment analysis. 
 \subsubsection{Stock Collection} 
 
 Yahoo Finances allows us to gather historical stock data for each of the four

@@ -40,7 +40,7 @@ import static android.os.Message.obtain;
 public class Web extends IntentService {
     private static final String sentiment = "GET SENTIMENT";
     private static final String TAG = "Web service";
-    private static final String HOST = "http://gilded.jarahm.com:5000/data";
+    private static final String HOST = "http://gilded.jarahm.com:8000/data";
     /**
      * Starts this service to perform action Foo with the given parameters. If
      * the service is already performing a task this action will be queued.
