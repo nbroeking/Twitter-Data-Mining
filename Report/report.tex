@@ -389,44 +389,76 @@ increases the time it takes to classify the tweets.
 \subsection{Correlation Analysis}
 
 Now that the sentiment analysis is completed and we have all the tweets
-classified as positive or negative we can begin the correleation analysis. We
-combined the twitter data with historical stock data. The stock data is
-obtained from http://www.nasdaq.com/quotes/. Specefically we are looking at
-Open and Close values. Before starting correlation analysis the twitter data
-and stock had to be combined. This was done all in R. The next step is to
-regress the change in open and close values for a given day on the percent of
-positive tweets about the company from the previous day. To be able to do this
-the twitter and stock data need to be matched up correctly. Because there are
-days of missing twitter data that cannot be recovered and no stock data on
-weekends there was some pre-processing involved in matching up tweets from one
-day with open and close values for the next day. Now we have an R script that
-is generalized to any set of stock and twitter data with arbitrary patterns of
-missing days, so processing of further data will be quicker. Currently there
-aren't enough data points to come to a good conclusion about, but soon there
-will be a lot more.
+classified as positive or negative we can begin the correleation analysis. \newline In this section we will graphically examine the relationship betweeen the percent of positive tweets and th
+e change in stock price. As well, we well perform a few different statistical tests to determine if there is any use
+ful correlation. 
+\newline\textbf{  Test One: Linear Regression}
+\newline\indent Assume $ y = \beta_0  + \beta_1x\ \ \  $ where y = change in stock value, x = percent of positive tw
+eets. I'll use the Ordinary Least Squares estimators to derive the regression parameters. To use OLS estimators I am
+ assuming that there is a linear relationship between response variable and the regressor. I am also assuming that t
+he residuals of this model will be uncorrelated and have constant variance. The $lm()$ function in R will perform th
+e regression. Regression models for open and close values for each company were created and all came out with very s
+imilar results. I present one example, change in Google Open values regressed on percent of positive tweets:
+\newline\indent $\hat{Y} = -2.48 + 6.794 x$the 
+\newline\indent and the model summary is: 
+\end{doublespace}
+\begin{lstlisting}
+lm(formula = open.vec ~ percent.pos)
 
-Looking ahead, after more data is collected the regression equation will be as
-follows: $ \ \ Y = \beta_0 + \beta_1X $ where $Y$ is the change in open and
-close values, and $X$ is the percent of positive tweets from the previous day.
-We are anticipating to see positive correlation between the percent of positive
-tweets and the change in open and close values. To test this correlation we'll
-use the chi-squared test for independence, the lift calculation, and the t-test
-to test the hypothesis that $\beta_1 = 0$ indicating that $X$ is independent of
-$Y$. To fit the regression model we will use the ordinary least squares
-estimator. We're performing this analyis on data from Google, Samsung, Apple,
-and Amazon. As well I anticipate that the stock data/twitter data for each of
-those companies will not be independent of each other, so they could
-potentially be added as regressors in each others models. Once more data is
-collected we can begin the statistical analysis. 
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-12.4474  -2.1983  -0.3133   3.1269  13.2047 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   -2.480      8.597  -0.289    0.776
+percent.pos    6.794     18.524   0.367    0.717
+
+Residual standard error: 5.392 on 22 degrees of freedom
+Multiple R-squared:  0.006077,  Adjusted R-squared:  -0.0391 
+F-statistic: 0.1345 on 1 and 22 DF,  p-value: 0.7173
+
+\end{lstlisting}
+\begin{doublespace}
+\indent Now I'll do a hypothesis test, specefially a T-test, to see if $\beta_1$ should equal 0, this would indicate
+ that there is no relationship between $x$ - percent of positive tweets, and $y$ - change in stock price. I'm goint 
+to set $\alpha = .05$ meaning that theoretically $5 \%$ of the time I will reject the null hypothesis $ (H_0)$ in fa
+vor of the alternate hypothesis $(H_1)$ when $ _0$ is actually true. 
+\newline\indent $ H_0: \beta_1 = 0 \ \ \ H_1: \beta_1 \neq 0$
+\newline\indent\large $T_{calc} = \frac{ \hat{\beta_1} - 0 }{s.e.(\hat{\beta_1})} = \frac{6.794}{18.524} = 0.367 $
+\newline\indent $ t_{ (n-2,\alpha/2)} = 2.07$
+\newline\indent $ \abs{T_{calc}} < t_{ (n-2,\alpha/2)} \ \ $ \normalsize so we fail to reject the null hypothesis th
+at there is no relationship between positive tweets and changes in stock price.
+\newline\indent In the model summary given above the p-value for $\beta_1$ is .717. This means that for us to reject
+ the null hypothesis that $H_0 =0$ we would have to set $\alpha = .717$ meaning would have had to allow the test to 
+reject the null hypothesis when it's true $71 \%$ of the time. This is unheard of.
+\newline\indent As well, given in the model summary is the $R^2$ value. This measures the percent of variance in $y$
+ that is explained by $x$. In a perfect linear model it would be 1. In our mode it is $.006$, indicating that $.6\%$
+ of the variance in the stock price can be explained by twitter data. This is an extremely low $R^2$ value. As well 
+as quantative evidence there is qualitative evidence of an absense of linear relationship between $x$ and $y$. See t
+he graphs below. Note that the blue data points/regression lines correspond to the change in close values, and the r
+ed data points/lines correspond to the change in stock open values.
+\newline\includegraphics[scale=.5]{google_positive.jpeg}\includegraphics[scale=.5]{amazon_negative.jpeg}
+\newline\includegraphics[scale=.5]{apple_negative.jpeg} 
+\newline\indent from these graphs it's very clear that there is no relationship between x and y. 
+\newline\newline\textbf{Test Two: Correlation Coefficient}
+\newline\indent Cor$(X,Y) = \frac{E ( X - \mu_x)(Y - \mu_y)}{\sigma_x\sigma_y}$
+\newline\indent This tests for linear correlation between x and y. If the correlation coefficient is $-1$ then the v
+ariables are perfectly negatively correlated. If it is 1 then they are perfectly positively correlated.
+\newline\indent For apple stock the correlation between the open values and the percent of positive tweets is $0.079
+$. This indicates that there is little to no relationship between the two. 
+
 
 \subsection{Error Analysis}
 
-To evaluate the accuracy of the model we'll look at the $R^2$ value, which
-shows the percent change in $Y$ that is explained by $X$. We can also look at
-the standard errors the of regression coefficients and the residuals of the
-models. If there is lots of correlation in the errors we can try using the
-generalized least squares estimators instead. 
-
+It's clear that our original goal of predicting the stock market with twitter sentiment 
+was not achieved. We may have gotten these results because we did not split up the data 
+enough into sub-categories. We might have found more interesting patterns if we had split tweets
+up into categories based off what else was in the tweet about the company, i.e. look at all the
+tweets about a new product that Google/Amazon/Samsung/Apple came out with. We could have done dataming
+on the positive and negative tweets to see if there were any similarites between them (other 
+than positive/negative words). Sometimes when too much data is meshed together patterns are masked;
+we don't know if this did or didn't happen. 
 
 \subsection{Application}
 
