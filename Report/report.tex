@@ -439,21 +439,22 @@ separate company bins in about 10 hours using 3 different processes.
 \subsection{Correlation Analysis}
 
 Now that the sentiment analysis is completed and we have all the tweets
-classified as positive or negative we can begin the correleation analysis. \newline In this section we will graphically examine the relationship betweeen the percent of positive tweets and th
-e change in stock price. As well, we well perform a few different statistical tests to determine if there is any use
-ful correlation. 
-\newline\textbf{  Test One: Linear Regression}
-\newline\indent Assume $ y = \beta_0  + \beta_1x\ \ \  $ where y = change in stock value, x = percent of positive tw
-eets. I'll use the Ordinary Least Squares estimators to derive the regression parameters. To use OLS estimators I am
- assuming that there is a linear relationship between response variable and the regressor. I am also assuming that t
-he residuals of this model will be uncorrelated and have constant variance. The $lm()$ function in R will perform th
-e regression. Regression models for open and close values for each company were created and all came out with very s
-imilar results. I present one example, change in Google Open values regressed on percent of positive tweets:
-\newline\indent $\hat{Y} = -2.48 + 6.794 x$the 
-\newline\indent and the model summary is: 
-\end{doublespace}
-\begin{lstlisting}
-lm(formula = open.vec ~ percent.pos)
+classified as positive or negative we can begin the correleation analysis.
+\newline In this section we will graphically examine the relationship betweeen
+the percent of positive tweets and th e change in stock price. As well, we well
+perform a few different statistical tests to determine if there is any use ful
+correlation.  \newline\textbf{  Test One: Linear Regression} \newline\indent
+Assume $ y = \beta_0  + \beta_1x\ \ \  $ where y = change in stock value, x =
+percent of positive tw eets. I'll use the Ordinary Least Squares estimators to
+derive the regression parameters. To use OLS estimators I am assuming that
+there is a linear relationship between response variable and the regressor. I
+am also assuming that t he residuals of this model will be uncorrelated and
+have constant variance. The $lm()$ function in R will perform th e regression.
+Regression models for open and close values for each company were created and
+all came out with very s imilar results. I present one example, change in
+Google Open values regressed on percent of positive tweets: \newline\indent
+$\hat{Y} = -2.48 + 6.794 x$the \newline\indent and the model summary is:
+\end{doublespace} \begin{lstlisting} lm(formula = open.vec ~ percent.pos)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
