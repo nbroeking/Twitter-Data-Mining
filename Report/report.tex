@@ -485,7 +485,7 @@ interested in what their company looks like in the public eye even if it
 doesn't have a direct relation to their stock price. There are a lot of complex
 tools out there that can help a CEO but nothing that is quick and easy and fits
 in his pocket. To do this we created an application that does just this. We can
-analyize the sentiment of these companies in real time and then display that
+analyze the sentiment of these companies in real time and then display that
 information to the user. In order to do this we have two parts. The server side
 that does real time sentiment analysis and hosts a rest api for devices to use.
 The mobile side is the client side that allows users to see the sentiment in
@@ -497,12 +497,12 @@ TODO: JOSH
 \subsubsection{Mobile Application}
 
 We built the mobile application for the android system. We can run it on any
-android device that runs Android Lolipop or greater. This gives the user a lot
-of flexiblity. It is really easy for anyone to install the app to their phone
-and instintly get real time sentiment analysis. When the phone starts up it
+android device that runs Android Lollipop or greater. This gives the user a lot
+of flexibility. It is really easy for anyone to install the app to their phone
+and instantly get real time sentiment analysis. When the phone starts up it
 reaches out via a web request the the Rest api that is doing the sentiment
 analysis. It gets the json back and parses it for the values. It then
-caluclates the percent positive and uses that to update its GUI. For the gui we
+calculates the percent positive and uses that to update its GUI. For the gui we
 chose to display a smiley face for a positive sentiment and a frowny face for a
 negative sentiment. A screen shot of the app running in the android simulator
 can be seen below.  
@@ -511,9 +511,21 @@ can be seen below.
 
 \includegraphics[width=\linewidth]{android.png}
 
-
 \section{conclusion}
 
+In conclusion we were able to determine that there is no relationship between
+twitter sentiment and the change in stock price the next day. The stock market
+is a complex system that is clearly not influenced by just one thing. Our calculations
+showed that less than 1\% of the change is stock value could be predicted using our
+methods. 
+
+Even though we weren't able to find a relationship our project was still a success.
+We were able to turn our sentiment analysis into a realtime tool that allows anyone
+to open up their phone and get realtime sentiment analysis. 
+
+Through this data mining process we learned many things about mining for sentiment.
+
+1) Your preprocessing step must
 \section{Future Work}
 
 \section{Sources}
