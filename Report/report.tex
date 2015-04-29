@@ -285,32 +285,40 @@ change this to "I loove hamburgers" The first logical question is then why do
 we leave two o in the word. This is because people use repeating characters to
 stress emotion so we want to treet loove and love differently. In addition to
 this we also changed all the characters to lowercase, changed any username to
-AT\_USER, removed additional white space, and stripped any punctunation. The
+AT\_USER, removed additional white space, and stripped any punctuation. The
 code for these two steps is shown below.
 
+\break
 \inputminted{python}{examples/preTweet.py}
 
-After these two steps we also filter out any stop words. Stop words are a list of words
-that are proven to have no sentiment value but will sway the classifier. The combination
-of all these steps brought us to our final pre processor.
+After these two steps we also filtered out any stop words. Stop words are a
+list of words that are proven to have no sentiment value but will sway the
+classifier. The combination of all these steps brought us to our final pre
+processor.
 
 \subsubsection{Stock Preprocessing}
  
- The last step in pre-processing, after sentiment analysis was performed on the tweets,
- was to combine the twitter data with the stock data. Since the two came from very different 
- sources and in different formats work had to be done before they could be combined for correlation
- analaysis. The goal was to calculate the change in stock value from day $n$ to day $n+1$ 
- and pair it with the percent of positive tweets on day $n$, This proved to be not straightforward
- due to the fact that there were arbitrary sized missing blocks of days in the twitter data, as well
- as no stock data on weekends. A day of twitter data had to be thrown out if there
- wasn't stock values available for that day and the preceding, and stock values had to be 
- thrown out if their wasn't the appropriate twitter and additional stock data to go along 
- with it. A function to determine weather or not two days are one day appart aided alot in the pre-processing:
- \begin{lstlisting}
+ The last step in pre-processing, after sentiment analysis was performed on the
+tweets, was to combine the twitter data with the stock data. Since the two came
+from very different sources and in different formats work had to be done before
+they could be combined for correlation analaysis. The goal was to calculate the
+change in stock value from day $n$ to day $n+1$ and pair it with the percent of
+positive tweets on day $n$, This proved to be not straightforward due to the
+fact that there were arbitrary sized missing blocks of days in the twitter
+data, as well as no stock data on weekends. A day of twitter data had to be
+thrown out if there wasn't stock values available for that day and the
+preceding, and stock values had to be thrown out if their wasn't the
+appropriate twitter and additional stock data to go along with it. A function
+to determine weather or not two days are one day appart aided alot in the
+pre-processing:
 
+\break 
+\begin{minted}{R}
 one.day <- function(date1,date2) {
 
-  daysPerMonth <- c(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+  daysPerMonth <- c(0, 31, 28, 31, 30, 31, 
+                    30, 31, 31, 30, 31, 30, 
+                    31)
        
       month1 <- as.numeric(date1[2])
       day1<- as.numeric(date1[3])
@@ -344,51 +352,85 @@ one.day <- function(date1,date2) {
 
 }
 
- \end{lstlisting}
-After the stock and twitter data was converted to the same format and re-orginazed into consecutive 
-days the correlation analysis could begin. 
+\end{minted}
+
+After the stock and twitter data was converted to the same format and
+re-orginazed into consecutive days the correlation analysis could begin. 
 
 \subsection{Sentiment Analysis}
 
-Once we have preprocessed all of the tweets we can finally analyze the text
-segment. To perform sentiment analysis we use a naive bayes classifier from the
-nltk python library. We train the classifier on 5000 tweets and then test its
-accuracy with 10000 tweets. Each one of these tweets was hand classified and
-publicly published online. We are only interested in the ratio between positive
-tweets to total tweets so we trained our classifier to mark anything that was
-not obviously positive as negative. We did not need to include a neutral
-category.
+After creating the Preprocessing tools we created the sentiment analyzer.
+We wrote the sentiment analyzer in python using the natural
+language tool kit library. In the final version we trained the classifier on 15000 tweets and then test its
+accuracy with 10000 tweets. Like the preprocessing step this phase went through
+a few iterations as well. We started with basic classifier and ended up with 
+a high performing naive bayse classifier that performed in real time.
 
 The major part of the sentiment analysis was choosing features to use for our
-classifier. We experimented with using different features such as letters, user
-attributes, and tweet attributes but for the most part these led to very low
-accuracies. Finally we found that using the words yield the best result. In
-order to determine the features we first take the training data and calculate
-the probabilities for the naive bayse classifier. Once we have trained the data
-we take the top 50 influential features and remove all others from the list. We
-do this to decrease the run time of the sentiment analysis.
+classifier. At first we just looked at raw words. However with our less than 
+good pre processor we weren't able to get reasonable results. In this first version
+we were only able to train on 2000 tweets because our memory got so bloated 
+that training on anymore would cause the process to get killed. The accuracy in this step
+lied somewhere between the 50\% and 55\% mark. In order to try and create 
+a better classifier we attempted to try other features. We found examples
+of people using letters to classify gender of a name and thought we could apply
+this to our classifier. We turned out to be very wrong. Our letter classifier showed about 
+a 50\% accuracy. This is about the accuracy we would expect to see if we were
+to randomly guess. After this slight set back we went back to the drawing board. 
+We talked with a Jamie Wood from Waylin. Waylin specializes in twitter sentiment 
+and provides similar services to their customers. Mr. Wood told us that a 65% accuracy
+would be considered a very good accuracy and anything above that would require a much
+larger training set. After talking to Mr. Wood we refactored again to use words as features
+but created a smarter feature extractor, shown below, that utilized the new preprocessing steps.
 
-The major challenge with the naive basian classifier is getting a high
-accuracy. Even with our best features we were only able to get our accuracy
-higher than 64\%.  We were not initially satisfied with this accuracy however
-in our research to create a better twitter sentiment engine we talked with
-Jamey Wood, CTO of Wayin. Wayin specializes in twitter sentiment analysis and
-does it on a daily basis for many custimers. He told us that 64\% is acctually
-a very high accuracy for this kind of analysis in industry and so trying to
-raise this accuracy would be a waiste of time. However we still want to look at
-other possibilities if time allows that could possible increase the accuracy of
-our sentiment analysis. 
+\inputminted{python}{examples/featureExtractor.py}
 
-The last major challenge of the sentement analysis is the runtime. We have a
-huge trade off with the number of features, types of features and how long it
-takes to run. Currently, after we limit our features it takes about a second to
-classifiy a tweet. To classify a weeks worth of tweets it takes almost 72
-hours. Anytime we train our classifier or add more features it dramatically
-increases the time it takes to classify the tweets.
+As apart of the new steps we also improved the training data that we fed to the classifier. 
+We made sure to have the same amount of positive tweets as negative tweets and we
+applied the new pre processing steps. In our final version our training looked like below.
+
+\break
+\inputminted{python}{examples/train.py}
+
+The new feature extractor worked really well with an accuracy at about 64\% 
+but still wasn't as good as we wanted. We realized the problem was most likely
+with the slowness of our code. We then spend the next week attempting to 
+optimize it even further. We started by using sets instead of lists and then using these
+sets to reverse how we were determining the feature vector. By iterating on the tweets
+instead of the feature vector and by using a dictionary with default values we were
+able to speed up the performance of our code by about 1000 times. At the midway demo
+we were processing about 5 to 10 tweets a second. After our optimizations we started
+classifying over 4000 tweets per second. This brought our runtime from about $O((nm)^2)$ 
+where n is the number of tweets and m is the words in each tweet, to $O(nm)$ These 
+optimizations then allowed us
+to train on 15000 tweets instead of just 5000. This extra volume of training jumped our
+accuracy up to about 90\%. This was a huge success in the project because the 
+jump in accuracy allows for us to find the correlation with a much higher accuracy. 
+
+When we brought our classifier to the full dataset we ran into one more problem. 
+Previously when we were running our classifier we did it on such a small database that we 
+could fit it all into memory. However, when we stepped up the the full dataset the operating
+system would start killing our process for using so much memory. This led to the last
+optimization we had to do on our classifier. We used a generator on the SQLite database
+to only return 1000 stored tweets at a time, shown below. These optimizations dramatically 
+increased the effectiveness of our classification step.
+
+\inputminted{python}{examples/generator.py}
+
+The final piece of our classifier was putting it all together. After training our classifier
+we needed to read all of the stored tweets from the database and export them 
+to a comma separated list for the Correlation analysis. To do this step we had a
+function that read from the database and echoed the tweet into the correct company bin.
+
+\inputminted{python}{examples/converter.py}
+
+This classifier was able to sort all of our 10 gb of tweet data into the separate company bins
+in about 10 hours using 3 different processes. 
 
 \subsection{Correlation Analysis}
 
 Now that the sentiment analysis is completed and we have all the tweets
+<<<<<<< HEAD
 classified as positive or negative we can begin the correleation analysis. \newline In this section we will graphically examine the relationship betweeen the percent of positive tweets and th
 e change in stock price. As well, we well perform a few different statistical tests to determine if there is any use
 ful correlation. 
@@ -447,6 +489,37 @@ ed data points/lines correspond to the change in stock open values.
 ariables are perfectly negatively correlated. If it is 1 then they are perfectly positively correlated.
 \newline\indent For apple stock the correlation between the open values and the percent of positive tweets is $0.079
 $. This indicates that there is little to no relationship between the two. 
+=======
+classified as positive or negative we can begin the correlation analysis. We
+combined the twitter data with historical stock data. The stock data is
+obtained from http://www.nasdaq.com/quotes/. Specifically we are looking at
+Open and Close values. Before starting correlation analysis the twitter data
+and stock had to be combined. This was done all in R. The next step is to
+regress the change in open and close values for a given day on the percent of
+positive tweets about the company from the previous day. To be able to do this
+the twitter and stock data need to be matched up correctly. Because there are
+days of missing twitter data that cannot be recovered and no stock data on
+weekends there was some pre-processing involved in matching up tweets from one
+day with open and close values for the next day. Now we have an R script that
+is generalized to any set of stock and twitter data with arbitrary patterns of
+missing days, so processing of further data will be quicker. Currently there
+aren't enough data points to come to a good conclusion about, but soon there
+will be a lot more.
+
+Looking ahead, after more data is collected the regression equation will be as
+follows: $ \ \ Y = \beta_0 + \beta_1X $ where $Y$ is the change in open and
+close values, and $X$ is the percent of positive tweets from the previous day.
+We are anticipating to see positive correlation between the percent of positive
+tweets and the change in open and close values. To test this correlation we'll
+use the chi-squared test for independence, the lift calculation, and the t-test
+to test the hypothesis that $\beta_1 = 0$ indicating that $X$ is independent of
+$Y$. To fit the regression model we will use the ordinary least squares
+estimator. We're performing this analyis on data from Google, Samsung, Apple,
+and Amazon. As well I anticipate that the stock data/twitter data for each of
+those companies will not be independent of each other, so they could
+potentially be added as regressors in each others models. Once more data is
+collected we can begin the statistical analysis. 
+>>>>>>> 67b434efa34a930fac2abe9128964c6544cf48bc
 
 
 \subsection{Error Analysis}
