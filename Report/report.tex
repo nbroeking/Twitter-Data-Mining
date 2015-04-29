@@ -1,5 +1,6 @@
 \documentclass{acm_proc_article-sp}
 
+\usepackage{graphicx}
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{minted}
@@ -298,7 +299,7 @@ processor.
 
 \subsubsection{Stock Preprocessing}
  
- The last step in pre-processing, after sentiment analysis was performed on the
+The last step in pre-processing, after sentiment analysis was performed on the
 tweets, was to combine the twitter data with the stock data. Since the two came
 from very different sources and in different formats work had to be done before
 they could be combined for correlation analaysis. The goal was to calculate the
@@ -359,73 +360,80 @@ re-orginazed into consecutive days the correlation analysis could begin.
 
 \subsection{Sentiment Analysis}
 
-After creating the Preprocessing tools we created the sentiment analyzer.
-We wrote the sentiment analyzer in python using the natural
-language tool kit library. In the final version we trained the classifier on 15000 tweets and then test its
-accuracy with 10000 tweets. Like the preprocessing step this phase went through
-a few iterations as well. We started with basic classifier and ended up with 
-a high performing naive bayse classifier that performed in real time.
+After creating the Preprocessing tools we created the sentiment analyzer.  We
+wrote the sentiment analyzer in python using the natural language tool kit
+library. In the final version we trained the classifier on 15000 tweets and
+then test its accuracy with 10000 tweets. Like the preprocessing step this
+phase went through a few iterations as well. We started with basic classifier
+and ended up with a high performing naive bayse classifier that performed in
+real time.
 
 The major part of the sentiment analysis was choosing features to use for our
-classifier. At first we just looked at raw words. However with our less than 
-good pre processor we weren't able to get reasonable results. In this first version
-we were only able to train on 2000 tweets because our memory got so bloated 
-that training on anymore would cause the process to get killed. The accuracy in this step
-lied somewhere between the 50\% and 55\% mark. In order to try and create 
-a better classifier we attempted to try other features. We found examples
-of people using letters to classify gender of a name and thought we could apply
-this to our classifier. We turned out to be very wrong. Our letter classifier showed about 
-a 50\% accuracy. This is about the accuracy we would expect to see if we were
-to randomly guess. After this slight set back we went back to the drawing board. 
-We talked with a Jamie Wood from Waylin. Waylin specializes in twitter sentiment 
-and provides similar services to their customers. Mr. Wood told us that a 65% accuracy
-would be considered a very good accuracy and anything above that would require a much
-larger training set. After talking to Mr. Wood we refactored again to use words as features
-but created a smarter feature extractor, shown below, that utilized the new preprocessing steps.
+classifier. At first we just looked at raw words. However with our less than
+good pre processor we weren't able to get reasonable results. In this first
+version we were only able to train on 2000 tweets because our memory got so
+bloated that training on anymore would cause the process to get killed. The
+accuracy in this step lied somewhere between the 50\% and 55\% mark. In order
+to try and create a better classifier we attempted to try other features. We
+found examples of people using letters to classify gender of a name and thought
+we could apply this to our classifier. We turned out to be very wrong. Our
+letter classifier showed about a 50\% accuracy. This is about the accuracy we
+would expect to see if we were to randomly guess. After this slight set back we
+went back to the drawing board.  We talked with a Jamie Wood from Waylin.
+Waylin specializes in twitter sentiment and provides similar services to their
+customers. Mr. Wood told us that a 65\% accuracy would be considered a very good
+accuracy and anything above that would require a much larger training set.
+After talking to Mr. Wood we refactored again to use words as features but
+created a smarter feature extractor, shown below, that utilized the new
+preprocessing steps.
 
 \inputminted{python}{examples/featureExtractor.py}
 
-As apart of the new steps we also improved the training data that we fed to the classifier. 
-We made sure to have the same amount of positive tweets as negative tweets and we
-applied the new pre processing steps. In our final version our training looked like below.
+As apart of the new steps we also improved the training data that we fed to the
+classifier.  We made sure to have the same amount of positive tweets as
+negative tweets and we applied the new pre processing steps. In our final
+version our training looked like below.
 
 \break
 \inputminted{python}{examples/train.py}
 
-The new feature extractor worked really well with an accuracy at about 64\% 
-but still wasn't as good as we wanted. We realized the problem was most likely
-with the slowness of our code. We then spend the next week attempting to 
-optimize it even further. We started by using sets instead of lists and then using these
-sets to reverse how we were determining the feature vector. By iterating on the tweets
-instead of the feature vector and by using a dictionary with default values we were
-able to speed up the performance of our code by about 1000 times. At the midway demo
-we were processing about 5 to 10 tweets a second. After our optimizations we started
-classifying over 4000 tweets per second. This brought our runtime from about $O((nm)^2)$ 
-where n is the number of tweets and m is the words in each tweet, to $O(nm)$ These 
-optimizations then allowed us
-to train on 15000 tweets instead of just 5000. This extra volume of training jumped our
-accuracy up to about 90\%. This was a huge success in the project because the 
-jump in accuracy allows for us to find the correlation with a much higher accuracy. 
+The new feature extractor worked really well with an accuracy at about 64\% but
+still wasn't as good as we wanted. We realized the problem was most likely with
+the slowness of our code. We then spend the next week attempting to optimize it
+even further. We started by using sets instead of lists and then using these
+sets to reverse how we were determining the feature vector. By iterating on the
+tweets instead of the feature vector and by using a dictionary with default
+values we were able to speed up the performance of our code by about 1000
+times. At the midway demo we were processing about 5 to 10 tweets a second.
+After our optimizations we started classifying over 4000 tweets per second.
+This brought our runtime from about $O((nm)^2)$ where n is the number of tweets
+and m is the words in each tweet, to $O(nm)$ These optimizations then allowed
+us to train on 15000 tweets instead of just 5000. This extra volume of training
+jumped our accuracy up to about 90\%. This was a huge success in the project
+because the jump in accuracy allows for us to find the correlation with a much
+higher accuracy. 
 
-When we brought our classifier to the full dataset we ran into one more problem. 
-Previously when we were running our classifier we did it on such a small database that we 
-could fit it all into memory. However, when we stepped up the the full dataset the operating
-system would start killing our process for using so much memory. This led to the last
-optimization we had to do on our classifier. We used a generator on the SQLite database
-to only return 1000 stored tweets at a time, shown below. These optimizations dramatically 
+When we brought our classifier to the full dataset we ran into one more
+problem.  Previously when we were running our classifier we did it on such a
+small database that we could fit it all into memory. However, when we stepped
+up the the full dataset the operating system would start killing our process
+for using so much memory. This led to the last optimization we had to do on our
+classifier. We used a generator on the SQLite database to only return 1000
+stored tweets at a time, shown below. These optimizations dramatically
 increased the effectiveness of our classification step.
 
 \inputminted{python}{examples/generator.py}
 
-The final piece of our classifier was putting it all together. After training our classifier
-we needed to read all of the stored tweets from the database and export them 
-to a comma separated list for the Correlation analysis. To do this step we had a
-function that read from the database and echoed the tweet into the correct company bin.
+The final piece of our classifier was putting it all together. After training
+our classifier we needed to read all of the stored tweets from the database and
+export them to a comma separated list for the Correlation analysis. To do this
+step we had a function that read from the database and echoed the tweet into
+the correct company bin.
 
 \inputminted{python}{examples/converter.py}
 
-This classifier was able to sort all of our 10 gb of tweet data into the separate company bins
-in about 10 hours using 3 different processes. 
+This classifier was able to sort all of our 10 gb of tweet data into the
+separate company bins in about 10 hours using 3 different processes. 
 
 \subsection{Correlation Analysis}
 
@@ -462,23 +470,51 @@ collected we can begin the statistical analysis.
 
 \subsection{Error Analysis}
 
-To evaluate the accuracy of the model we'll look at the $R^2$ value, which
-shows the percent change in $Y$ that is explained by $X$. We can also look at
-the standard errors the of regression coefficients and the residuals of the
-models. If there is lots of correlation in the errors we can try using the
-generalized least squares estimators instead. 
+To evaluate the accuracy of the model we looked at the $R^2$ value, which shows
+the percent change in $Y$ that is explained by $X$. We can also look at the
+standard errors the of regression coefficients and the residuals of the models.
+If there is lots of correlation in the errors we can try using the generalized
+least squares estimators instead. 
 
 
 \subsection{Application}
 
-Our goal is to create a mobile application that can process tweets in real time
-and then display what companies it recomends investing in. In order to
-acomplish this task. We will take our model that we developed using the stages
-above and using a server to analyze tweets in real time. The server will then
-use the model to predict the stock values for the next day. When the user opens
-the app on his phone the app will reach out to the server using a web request
-and get the recomended stocks using json. The mobile device will then display
-these results to the user.
+Even though we wern't able to determine a coorilation between the data sets it
+didn't mean that we didnt have usefull tools. Companies are still very
+interested in what their company looks like in the public eye even if it
+doesn't have a direct relation to their stock price. There are a lot of complex
+tools out there that can help a CEO but nothing that is quick and easy and fits
+in his pocket. To do this we created an application that does just this. We can
+analyize the sentiment of these companies in real time and then display that
+information to the user. In order to do this we have two parts. The server side
+that does real time sentiment analysis and hosts a rest api for devices to use.
+The mobile side is the client side that allows users to see the sentiment in
+real time.
+
+\subsubsection{Rest API}
+TODO: JOSH
+
+\subsubsection{Mobile Application}
+
+We built the mobile application for the android system. We can run it on any
+android device that runs Android Lolipop or greater. This gives the user a lot
+of flexiblity. It is really easy for anyone to install the app to their phone
+and instintly get real time sentiment analysis. When the phone starts up it
+reaches out via a web request the the Rest api that is doing the sentiment
+analysis. It gets the json back and parses it for the values. It then
+caluclates the percent positive and uses that to update its GUI. For the gui we
+chose to display a smiley face for a positive sentiment and a frowny face for a
+negative sentiment. A screen shot of the app running in the android simulator
+can be seen below.  
+
+\break
+
+\includegraphics[width=\linewidth]{android.png}
+
+
+\section{conclusion}
+
+\section{Future Work}
 
 \section{Sources}
 
