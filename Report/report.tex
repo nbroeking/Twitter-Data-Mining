@@ -574,8 +574,31 @@ to open up their phone and get realtime sentiment analysis.
 
 Through this data mining process we learned many things about mining for sentiment.
 
-1) Your preprocessing step must
+1) Your preprocessing step must be tailored to your data. At first we were just doing
+minimal work with our preprocessing and letting the classifier do most of the work. 
+This however proved to be very inefficient in both time and accuracy. Getting to know
+the data and then removing the stuff that you don't need proved to not only speed 
+up the classifier but also to provide more accurate results.
+
+2.) Feature extraction is the key to a good naive baysean classifier. If you choose
+the wrong features you just wont get accurate results. In addition to the accuracy
+if you are inefficient in your feature extraction it will bog down the whole system. 
+
+3.) Just because you don't find a correlation doesn't mean that the project is a failure.
+We were able to prove that there is no correlation which helps further research in 
+the area. This also led us to be able to create a useful app that shows real time 
+sentiment analysis
+
 \section{Future Work}
+
+In our project we determined that there is no correlation between stock and twitter 
+sentiment on a day by day basis. This does not rule out many other granularities though.
+More research should be done to see if one could predict stocks on a larger level. 
+
+In addition to this we were not able to look at a case by case basis. Other research 
+has been done that shows you can sometimes use twitter to predict stock changes. 
+We would like to extend our research into this realm to see if even though there is no 
+universal model. Maybe we could create one that flags events. 
 
 \section{Sources}
 
