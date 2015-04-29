@@ -2,6 +2,8 @@
 
 \usepackage{lipsum}
 
+\usepackage{minted}
+
 \title{Predicting Stock Trends using Twitter Sentiment}
 \author{
     Nicolas Broeking \\
@@ -234,7 +236,7 @@ block our connection. SQlite is a lightweight fast database that is reliable
 and easy to use. We also didn't have to worry about other processes attempting
 to access the same service so SQLite seemed like a great choice. For each tweet
 we stored the text, its retweeted count, time of the tweet, userid and the
-tweet id. For each user we also stored the userid, the followers_count, friend
+tweet id. For each user we also stored the userid, the followers count, friend
 count, and their name. We ended up not using all this information but we wanted
 to store all relevant information during the data collection phase so we would
 have it just in case it became relevant later. 
@@ -252,22 +254,45 @@ we needed it.
 
 \subsection{Data Preprocessing}
 
-In the preprocessing step we need to filter our tweets on certain criteria.
-Logically we do everything in the data preprocessing step but we acctually do
-them in two different phases. The first part of our preprocessing is done
-during the collection phase. First we filter all tweets based off of if they
-contain a reference to one of the four companies. As apart of the twitter api
-we are able to specify that we only want tweets if they contain the text Apple,
-Google, Samsung, or Amazon. Once we receive the tweet The next step is to
-filter based off of language. Because analyzing tweets in multiple languages
-makes the problem very difficult we only store english tweets. Once we filtered
-our tweets we store them in the database.
+The preprocessing step, like the data collection step, was done in two parts.
+First we did the preprocessing of the tweets to prepare for the sentiment analysis.
+Then we preprocessed the stock data to fit with the twitter data to allow us to 
+compare between the two data sets.
 
-Once we have done completed the data collection phase we do the next step of
-the data preprocessing. In this step we prepare the data for sentiment
-analysis. In order to do this we first bin the tweets into four different
-categories based off of a reference to the company. For example if a tweet
-contains "Apple" we put into Apples bin.  
+\subsubsection{Tweet Preprocessing}
+
+Our twitter preprocessing step went through many versions of development before
+it arrived in its current state. In the first version we removed all words
+under three letters and then passed on the full tweet to the classifier.
+Unfortunately, this did not give us any good results. There were too many words
+to add to our feature vector and so we ended up with a lot of irrelevant
+features. The next iteration of the project used a different feature extractor.
+In this step we refactored our pre processor to strip away all non alpha
+characters. Finally, before the midway presentation we refactored again to a
+more complex pre processor. In this version we removed all urls and replaced it
+with the string URL. Then we tool all hashtags and replaced it with the string
+TAG. After the feedback from the midway presentation we decided that we weren't
+satisfied with our pre processor and so we did research.  We added other
+functions that allowed our preprocessor to become the most effective. The first
+major thing we did was replace all repeating characters with two of the same.
+In the tweet "I loooooooooooooove hamburgers" compared against "I looooove
+pickles" we would get two different words for love. We really only want one
+though because they represent the same word. Our first pre processor step would
+change this to "I loove hamburgers" The first logical question is then why do
+we leave two o in the word. This is because people use repeating characters to
+stress emotion so we want to treet loove and love differently. In addition to
+this we also changed all the characters to lowercase, changed any username to
+AT\_USER, removed additional white space, and stripped any punctunation. The
+code for these two steps is shown below.
+
+\inputminted{python}{examples/preTweet.py}
+
+After these two steps we also filter out any stop words. Stop words are a list of words
+that are proven to have no sentiment value but will sway the classifier. The combination
+of all these steps brought us to our final pre processor.
+
+\subsubsection{Stock Preprocessing}
+
 
 \subsection{Sentiment Analysis}
 
@@ -283,10 +308,10 @@ category.
 The major part of the sentiment analysis was choosing features to use for our
 classifier. We experimented with using different features such as letters, user
 attributes, and tweet attributes but for the most part these led to very low
-accuracies. Finally we found that using the words yeiled the best result. In
+accuracies. Finally we found that using the words yield the best result. In
 order to determine the features we first take the training data and calculate
-the probabilties for the naive bayse classifier. Once we have trained the data
-we take the top 50 infulential features and remove all others from the list. We
+the probabilities for the naive bayse classifier. Once we have trained the data
+we take the top 50 influential features and remove all others from the list. We
 do this to decrease the run time of the sentiment analysis.
 
 The major challenge with the naive basian classifier is getting a high
