@@ -4,7 +4,7 @@
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{minted}
-%\usepackage{amssymb}
+\usepackage{amssymb}
 \usepackage{setspace}
 \usepackage{commath}
 \usepackage{bbding}
@@ -463,7 +463,10 @@ Regression models for open and close values for each company were created and
 all came out with very s imilar results. I present one example, change in
 Google Open values regressed on percent of positive tweets: \newline\indent
 $\hat{Y} = -2.48 + 6.794 x$the \newline\indent and the model summary is:
-\end{doublespace} \begin{lstlisting} lm(formula = open.vec ~ percent.pos)
+
+\begin{minted}{R} 
+
+lm(formula = open.vec ~ percent.pos)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
@@ -478,8 +481,8 @@ Residual standard error: 5.392 on 22 degrees of freedom
 Multiple R-squared:  0.006077,  Adjusted R-squared:  -0.0391 
 F-statistic: 0.1345 on 1 and 22 DF,  p-value: 0.7173
 
-\end{lstlisting}
-\begin{doublespace}
+\end{minted}
+
 \indent Now I'll do a hypothesis test, specefially a T-test, to see if $\beta_1$ should equal 0, this would indicate
  that there is no relationship between $x$ - percent of positive tweets, and $y$ - change in stock price. I'm goint 
 to set $\alpha = .05$ meaning that theoretically $5 \%$ of the time I will reject the null hypothesis $ (H_0)$ in fa
