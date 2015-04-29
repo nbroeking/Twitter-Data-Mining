@@ -8,10 +8,12 @@ def convertDatabase(classifier):
         con = lite.connect(sys.argv[1])
     
         cur = con.cursor()    
-        cur.execute('SELECT Tweets.id, text, retweeted, 
+        cur.execute('SELECT Tweets.id, text, 
+                    retweeted, 
                     retweeted_count, time, 
                     followers_count, 
-                    friendcount from Tweets LEFT JOIN Users on 
+                    friendcount from Tweets 
+                    LEFT JOIN Users on 
                     Tweets.userid == Users.userid 
                     group by Tweets.id;');
    
@@ -30,10 +32,12 @@ def convertDatabase(classifier):
             if "amazon" in row[1].lower():
                 f = amazon
 
-            f.write("%d, %s, %r, %d, %s, %d, %d\n" % (row[0], 
+            f.write("%d, %s, %r, %d, %s, %d, %d\n" 
+                % (row[0], 
                 classifier.classify(
                     extractFeatures(
-                        getFeatureVector(PreprocessTweet(row[1])))),
+                        getFeatureVector(
+                        PreprocessTweet(row[1])))),
                 row[2], row[3], 
                 row[4], row[5], 
                 row[6])) 

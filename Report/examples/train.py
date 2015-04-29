@@ -21,7 +21,8 @@ def train():
 
             word_features.update(featureVec)
 
-            tup = (text, 'pos' if int(line[1]) == 1 else 'neg')
+            tup = (text, 'pos' if int(line[1]) == 1 
+                else 'neg')
             
             if i <= 20000:
                 if( needPos and tup[1] == 'pos'):
@@ -29,7 +30,8 @@ def train():
                     needPos = False
                     i+=1;
 
-                if( (needPos is False) and tup[1] == 'neg'):
+                if( (needPos is False) and tup[1] 
+                    == 'neg'):
                     trainingdata.append(tup)
                     needPos = True         
                     i+=1;
@@ -40,7 +42,8 @@ def train():
                     needPos = False
                     i+=1;
 
-                if( (needPos is False) and tup[1] == 'neg'):
+                if( (needPos is False) and tup[1] 
+                    == 'neg'):
                     testingdata.append(tup)
                     needPos = True         
                     i+=1;
@@ -51,7 +54,8 @@ def train():
                     extractFeatures, 
                     trainingdata)
 
-    classifier = nltk.NaiveBayesClassifier.train(training_set)
+    classifier = nltk.NaiveBayesClassifier.train(
+        training_set)
 
     testing_set = nltk.classify.util.apply_features(
                     extractFeatures,
