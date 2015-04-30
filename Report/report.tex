@@ -206,12 +206,13 @@ results to what we showed. d[2]
 Many other studies have been done similar to the first two on how to use
 twitter to predict stock prices. The one thing that has been determined for
 sure is that there is a high correlation between peoples' attitudes and stock
-value. However, it hasn't been determined if twitter accurately reflects market sentiment
-and therefore is the basis of our project. In one situation Twitter was used in 2013, to predict a drop in Royal Caribbean's stock
-value when people started tweeting about the flu spreading on one of its
-cruises. Researchers were able to predict the drop in price 48 minutes before
-the stock plunged about 3\%. This was only a rare case however and worked under
-a very specific set of circumstances.[3]
+value. However, it hasn't been determined if twitter accurately reflects market
+sentiment and therefore is the basis of our project. In one situation Twitter
+was used in 2013, to predict a drop in Royal Caribbean's stock value when
+people started tweeting about the flu spreading on one of its cruises.
+Researchers were able to predict the drop in price 48 minutes before the stock
+plunged about 3\%. This was only a rare case however and worked under a very
+specific set of circumstances.[3]
 
 Once we found information regarding other studies that have been done in
 sentiment analysis and stock price correlation we started looking into the best
@@ -230,10 +231,10 @@ the language and the toolkit before creating our own custom sentiment analyzer.
 
 \section{Tasks}
 
-In order to successfully prove or in our case, disprove, a correlation and then to create an application
-we split our project into ten different sub tasks. These tasks, explained below,
-allowed us to split the workload among the group and to ensure that we stayed
-on a schedule for a successful project.
+In order to successfully prove or in our case, disprove, a correlation and then
+to create an application we split our project into ten different sub tasks.
+These tasks, explained below, allowed us to split the workload among the group
+and to ensure that we stayed on a schedule for a successful project.
 
 \subsection{Data Collection} 
 
@@ -248,7 +249,9 @@ In order to collect the tweets from Twitter we needed to set up a channel to
 the Twitter Streaming API. The API allows us to request all tweets related to
 Amazon, Apple, Google, or Samsung. Depending on the current load to the twitter
 servers this provided anywhere from 4\% to 40\% of all tweets being posted at
-any given time.
+any given time. In order to create the streaming tool we used python and a library
+called Tweepy. Tweepy allows a call back event system that will notify everytime
+Twitter has more tweets for us. 
 
 Once we had the tweets we immediately stored them in a SQLite database.  We had
 a lot of discussion about what would be the best way to store the tweets. We
