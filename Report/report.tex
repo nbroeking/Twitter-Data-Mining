@@ -44,14 +44,6 @@
 \begin{document}
 \nocite{*}
 
-\toappear{Permission to make digital or hard copies of all or part of this work
-for personal or classroom use is granted without fee provided that copies are
-not made or distributed for profit or commercial advantage and that copies bear
-this notice and the full citation on the first page. To copy otherwise, or
-republish, to post on servers or to redistribute to lists, requires prior
-specific permission..  Copyright 2015 Broeking, Rahm, Hoffee}
-
-\maketitle
 
 \begin{abstract} 
 
@@ -325,7 +317,6 @@ this we also changed all the characters to lowercase, changed any username to
 AT\_USER, removed additional white space, and stripped any punctuation. The
 code for these two steps is shown below.
 
-\break
 \inputminted{python}{examples/preTweet.py}
 
 After these two steps, we also filtered out any stop words. Stop words are a
@@ -349,7 +340,6 @@ appropriate twitter and additional stock data to go along with it. A function
 to determine weather or not two days are one day apart aided a lot in the
 pre-processing:
 
-\break 
 \begin{minted}{R}
 one.day <- function(date1,date2) {
 
@@ -430,7 +420,6 @@ classifier.  We made sure to have the same amount of positive tweets as
 negative tweets and we applied the new pre processing steps. In our final
 version our training looked like below.
 
-\break
 \inputminted{python}{examples/train.py}
 
 The new feature extractor worked really well with an accuracy at about 64\% but
@@ -616,8 +605,6 @@ calculates the percent positive and uses that to update its GUI. For the GUI we
 chose to display a smiley face for a positive sentiment and a frowny face for a
 negative sentiment. A screen shot of the application running in the android simulator
 can be seen below.  
-
-\break
 
 \includegraphics[width=\linewidth]{android.png}
 
