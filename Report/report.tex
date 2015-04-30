@@ -10,8 +10,13 @@
 \usepackage{bbding}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage[backend=bibtex]{biblatex}
+
+\bibliography{report}
+
 \graphicspath{ {c:~/TwitterMining/Report/} }
 \newcommand*{\field}[1]{\mathbb{#1}}%
+
 
 
 \title{Predicting Stock Trends using Twitter Sentiment}
@@ -37,6 +42,7 @@
 
 
 \begin{document}
+\nocite{*}
 
 \toappear{Permission to make digital or hard copies of all or part of this work
 for personal or classroom use is granted without fee provided that copies are
@@ -129,7 +135,7 @@ that predicted stock trends. However, it is still very useful to have a
 sentiment analyzer so we decided that it would be best to create an mobile application to
 shows sentiment analysis instead. To do this we had two parts: The REST API
 and the mobile application. The REST API was written in Haskell and performed the real
-time sentiment analysis.  The mobile app was written for android and reaches out
+time sentiment analysis.  The mobile application was written for android and reaches out
 to the REST API in order to get the sentiment. The two work together to create a user
 friendly, easy to use application.
 
@@ -149,7 +155,7 @@ application.
 Josh Rahm has spent his career working with embedded devices, cellular
 technologies and billing platforms. Rahm contributions were with sentiment
 analysis, optimizations, and converting the tools to be used in a real time
-system on the server. He also created  the Rest Api that allows the mobile app to get
+system on the server. He also created  the REST API that allows the mobile application to get
 the real time sentiment analysis.
 
 Anna Hoffee is a student in the mathematics department. She has spent her
@@ -251,7 +257,7 @@ the Twitter Streaming API. The API allows us to request all tweets related to
 Amazon, Apple, Google, or Samsung. Depending on the current load to the twitter
 servers this provided anywhere from 4\% to 40\% of all tweets being posted at
 any given time. In order to create the streaming tool we used python and a library
-called Tweepy. Tweepy allows a call back event system that will notify everytime
+called Tweepy. Tweepy allows a call back event system that will notify every time
 Twitter has more tweets for us. 
 
 Once we had the tweets we immediately stored them in a SQLite database.  We had
@@ -260,8 +266,8 @@ had to make sure that we kept up with the streaming API or else twitter would
 block our connection. SQlite is a lightweight fast database that is reliable
 and easy to use. We also didn't have to worry about other processes attempting
 to access the same service so SQLite seemed like a great choice. For each tweet
-we stored the text, its retweeted count, time of the tweet, userid and the
-tweet id. For each user we also stored the userid, the followers count, friend
+we stored the text, its re-tweeted count, time of the tweet, user id and the
+tweet id. For each user we also stored the user id, the followers count, friend
 count, and their name. We ended up not using all this information but we wanted
 to store all relevant information during the data collection phase so we would
 have it just in case it became relevant later. 
@@ -641,7 +647,7 @@ if you are inefficient in your feature extraction it will bog down the whole sys
 
 3.) Just because you don't find a correlation doesn't mean that the project is a failure.
 We were able to prove that there is no correlation which helps further research in 
-the area. This also led us to be able to create a useful app that shows real time 
+the area. This also led us to be able to create a useful application that shows real time 
 sentiment analysis
 
 \section{Future Work}
@@ -662,25 +668,6 @@ studies that researches were able to see a dip in the stock price by watching
 what was being posted on twitter. It would be interesting to investigate
 phenomenon such as this more in depth.  
 
-\section{Sources}
-
-1.) Eduardo J. Ruiz, Vagelis Hristidis, Carlos Catillo, Aristides Gionis, and
-Alejanro Jaimes,  2012, Correlating Financial Time Series with Micro-Blogging
-Activity DOI=http://www.cs.ucr.edu/~vagelis/publications/wsdm2012-microblog-financial.pdf 
-
-2.) Johan Bollen, Huina Mao, Xiao-Jun Zeng, 2010, Twitter mood predicts the stock
-market, arXiv:1010.3003 [cs.CE], DOI=http://www.sciencedirect.com/science/article/pii/S187775031100007X
-
-
-3.) Stan Alcorn, Twitter Can Predict The Stock Market, If You're Reading The Right
-Tweets, 2013
-
-4.) http://ravikiranj.net/posts/2012/code/how-build-twitter-sentiment-analyzer/
-
-5.) http://www.labic.icmc.usp.br/wti2010/IIIWTI\_camera\_ready/74769.pdf
-
-6.) http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/
-
-7.) https://snippetsofcode.wordpress.com/2014/04/28/fast-tutorial-to-nltk-using-python/
+\printbibliography
 
  \end{document}
