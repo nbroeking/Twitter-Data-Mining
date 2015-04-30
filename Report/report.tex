@@ -54,8 +54,8 @@ growing at an increasing rate. It is an advanced area of research to be able to
 use that data to predict or better understand the world around us. In our
 project we attempted to discover a relationship between twitter sentiment and
 stock values the next day. Unfortunately, we failed at determining a
-relationship. We were able to prove that no such relationship exists. However,
-The project was not a total failure. We were able to create a realtime
+relationship, but, to quote Thomas Edison, we did not fail, we found exactly how \emph{not}
+to predict changes in the stock market. In addition, We were able to create a real-time
 sentiment engine that allows our mobile application to get real time sentiment
 analysis.
 
@@ -90,7 +90,7 @@ this project we looked at four companies, Amazon, Apple, Google, and Samsung.
 
 The first step in determining a relationship was to collect data. To do this we had to gather information
 from two sources, Twitter, and Yahoo. Twitter allowed us to open a connection
-to the streaming api. Using this api we receive anywhere between 1\% and 40\%
+to the streaming API. Using this API we receive anywhere between 1\% and 40\%
 of all the tweets being tweeted at any given time of the day. This percentage depends on the current Twitter
 load and how many things we are filtering on. Once we received a tweet we would
 store it in a database for latter processing.  In addition to collecting
@@ -98,17 +98,17 @@ twitter data we also collected historical stock data. Yahoo provides historical
 stock data for companies going back many years. Once we collected all our
 tweets we gathered the stock data for the same intervals of time.
 
-Once we had all the data we had to pre-process it before we could do any
-analysis. Each data set needed to be pre-processed in order to perform
+Once we had all the data, we had to pre-process it before we could do any
+analysis. Each dataset needed to be pre-processed in order to perform
 efficient analysis. For Twitter we had to filter each tweet and
-remove all unnecessary words. We needed to try and strip down the information
+remove all unnecessary words. We needed to try to strip down the information
 as much as possible or else the classifier would become unreasonable slow. The
-stock data was another challenge all together. Because the tweets were not
-received on a constant time bases we had to filter all the stock data to match
-up correctly with tweets. Once we preprocessed them we were able to pass them to
+stock data was another challenge all together. Since the tweets were not
+received on a constant time bases, we had to filter all the stock data to match
+up correctly with tweets. Once we preprocessed, we were then able to pass them to
 the sentiment analysis step.
 
-Before we could actually determine the correlation between the data sets we had
+Before we could actually determine the correlation between the data sets, we had
 to classify all the tweets.  To do this we used a Naive Bayes Classifier. Our
 classifier was built to extract each word from the preprocessed text. Each word
 was then added to a dictionary to describe the sentiment of each tweet.
@@ -122,23 +122,23 @@ to the data with Ordinary Least Squares estimators. The model was not at all
 adequate, but allowed us to perform many conclusive statistical tests for
 correlation including a t-test and $R^2$ value examination. 
 
-Once we determined that there was no correlation we had to decided what our
+Once we determined there was no correlation, we had to decided what our
 next step was. Originally, We were hoping to find a correlation but because we determined
 that there wasn't one we were no longer able to create a mobile app
 that predicted stock trends. However, it is still very useful to have a
-sentiment analyzer so we decided that it would be best to create an app that
-shows sentiment analysis instead. To do this we had two parts.  The rest api
-and the mobile app. The rest api was written in Haskel and performed the real
+sentiment analyzer so we decided that it would be best to create an mobile application to
+shows sentiment analysis instead. To do this we had two parts: The REST API
+and the mobile application. The REST API was written in Haskell and performed the real
 time sentiment analysis.  The mobile app was written for android and reaches out
-to the rest api in order to get the sentiment. The two work together to create a user
-friendly, easy to use app.
+to the REST API in order to get the sentiment. The two work together to create a user
+friendly, easy to use application.
 
 
 \section{Authors}
 
 The authors of this project are Nicolas Broeking, Anna
 Hoffee, and Joshua Rahm. Broeking and Rahm are graduate students at the
-University of Colorado at Boulder. Hoffee is a undergraduate student at the
+University of Colorado at Boulder. Hoffee is an undergraduate student at the
 University of Colorado.
 
 Nicolas Broeking has worked on embedded systems and mobile applications for
@@ -161,13 +161,14 @@ there was no correlation.
 
 The Stock Market is one of the largest entities in Western and World economies.
 In a world where a 15\% increase is assets per year is massive,  even the
-ability to increase certainty in the market by a few percent is a huge.
+ability to increase certainty in the market by a few percentage points is appreciable.
 Companies and individuals can harness this technology make billions and secure
 investments, producing and saving billions for the economy. While making
 billions is outside the scope of this project, we thought it was possible to
 significantly increase the accuracy of stock predictions. We know that public
-image is critical to stock value. If a company's image drastically decreases
-then we predicted that its stock value will change. This ended up to be an
+image is critical to stock value; therefore, we predicted that if a company's
+public sentiment, displayed on Twitter, were to decrease, then it would stand to reason
+that there would be a drop in the stock value of said company. This ended up to be an
 incorrect prediction and we were able to show that there exists no correlation
 between twitter sentiment and changes in stock value.
 
@@ -195,8 +196,8 @@ However, even in this case however they were not able to find a reliable
 correlation but they did give us a start with where to begin our search[1] 
 
 Another team, Twitter Mood Predicts the Stock Market, attempted to determine
-how twitter mood effects the stock price. They grouped tweets into 6
-dimensions Calm, Alert, Sure, Vital, Kind, and Happy. They then took these
+how twitter mood affects the stock price. They grouped tweets into 6
+dimensions Calm, Alert, Sure, Vital, Kind, and Happy. Then they took these
 categories and created a relationship between to the closing value of the Dow
 Jones. They only wanted to determine though if there was a relationship at all. 
 On a very specific data set they were able to find a correlation between the values
@@ -216,7 +217,7 @@ specific set of circumstances.[3]
 
 Once we found information regarding other studies that have been done in
 sentiment analysis and stock price correlation we started looking into the best
-ways to actually do sentiment analysis. After the midway presentation we were not happy
+ways to actually do sentiment analysis. After the midway presentation, we were not happy
 with our accuracies. We talked with Jamie Wood from Waylin. Waylin specializes
 in performing sentiment analysis at an industrial scale. Sentiment analysis on
 twitter data is a very challenging task because tweets are a form of natural
@@ -238,7 +239,7 @@ and to ensure that we stayed on a schedule for a successful project.
 
 \subsection{Data Collection} 
 
-To collect all of the data that we needed we needed to get it from two sources.
+To collect all the data that we needed to get it from two sources.
 First we had to get a decent volume of tweets to perform the sentiment
 analysis. Then we had to gather data from Yahoo that matched the same time
 period os the twitter data.
@@ -255,7 +256,7 @@ Twitter has more tweets for us.
 
 Once we had the tweets we immediately stored them in a SQLite database.  We had
 a lot of discussion about what would be the best way to store the tweets. We
-had to make sure that we kept up with the streaming api or else twitter would
+had to make sure that we kept up with the streaming API or else twitter would
 block our connection. SQlite is a lightweight fast database that is reliable
 and easy to use. We also didn't have to worry about other processes attempting
 to access the same service so SQLite seemed like a great choice. For each tweet
@@ -273,11 +274,11 @@ us to put it in the database. This function is shown below.
 \subsubsection{Stock Collection} 
 
 To get the stock data we needed to collect historical data fore each of our
-four companies. Yahoo Finances has a great api that allowed us to download the
+four companies. Yahoo Finances has a great API that allowed us to download the
 data at the day granularity going back a couple years. We only took the data
 for the same time period as our tweets and then stored them in a comma
 separated text format.  This data source provides us with the Open, Close,
-High, Low, and Data attributes. Similarly to the tweets, we stored more
+High, Low, and Data attributes. Similarly, to the tweets, we stored more
 information than we needed to make sure that we had extra information in case
 we needed it. 
 
@@ -305,7 +306,7 @@ with the string URL. Then we tool all hashtags and replaced it with the string
 TAG. After the feedback from the midway presentation we decided that we weren't
 satisfied with our pre processor and so we did research. We added other
 functions that allowed our preprocessor to become the most effective. The first
-major thing we did was replace all repeating characters with two of the same.
+major thing we did was to replace all repeating characters with two of the same.
 In the tweet "I loooooooooooooove hamburgers" compared against "I looooove
 pickles" we would get two different words for love. We really only want one
 though because they represent the same word. 
@@ -321,7 +322,7 @@ code for these two steps is shown below.
 \break
 \inputminted{python}{examples/preTweet.py}
 
-After these two steps we also filtered out any stop words. Stop words are a
+After these two steps, we also filtered out any stop words. Stop words are a
 list of words that are proven to have no sentiment value but will sway the
 classifier. The combination of all these steps brought us to our final pre
 processor.
@@ -389,7 +390,7 @@ reorganized into consecutive days the correlation analysis could begin.
 
 \subsection{Sentiment Analysis}
 
-After creating the Preprocessing tools we created the sentiment analyzer.  We
+After creating the Preprocessing tools, we created the sentiment analyzer.  We
 wrote the sentiment analyzer in python using the natural language tool kit
 library. In the final version we trained the classifier on 15000 tweets and
 then test its accuracy with 10000 tweets. Like the preprocessing step this
@@ -398,16 +399,16 @@ and ended up with a high performing Naive Bayes Classifier that performed in
 real time.
 
 The major part of the sentiment analysis was choosing features to use for our
-classifier. At first we just looked at raw words. However with our less than
+classifier. At first we just looked at raw words. However, with our less than
 good pre processor we weren't able to get reasonable results. In this first
 version we were only able to train on 2000 tweets because our memory got so
 bloated that training on anymore would cause the process to get killed. The
 accuracy in this step lied somewhere between the 50\% and 55\% mark. In order
-to try and create a better classifier we attempted to try other features. We
+to try to create a better classifier we attempted to try other features. We
 found examples of people using letters to classify gender of a name and thought
 we could apply this to our classifier. We turned out to be very wrong. Our
 letter classifier showed about a 50\% accuracy. This is about the accuracy we
-would expect to see if we were to randomly guess. After this slight set back we
+would expect to see if we were to randomly guess. After this slight set back, we
 went back to the drawing board.  We talked with a Jamie Wood from Waylin.
 Waylin specializes in twitter sentiment and provides similar services to their
 customers. Mr. Wood told us that a 65\% accuracy would be considered a very good
@@ -416,9 +417,9 @@ After talking to Mr. Wood we refactored again to use words as features but
 created a smarter feature extractor, shown below, that utilized the new
 preprocessing steps.
 
-\inputminted{python}{examples/featureExtractor.py}
+\inputminted{python}{examples/featureExtractor.py},:
 
-As apart of the new steps we also improved the training data that we fed to the
+As a Part of the new steps we also improved the training data that we fed to the
 classifier.  We made sure to have the same amount of positive tweets as
 negative tweets and we applied the new pre processing steps. In our final
 version our training looked like below.
@@ -437,15 +438,15 @@ times. At the midway demo we were processing about 5 to 10 tweets a second.
 After our optimizations we started classifying over 4000 tweets per second.
 This brought our runtime from about $O((nm)^2)$ where n is the number of tweets
 and m is the words in each tweet, to $O(nm)$ These optimizations then allowed
-us to train on 15000 tweets instead of just 5000. This extra volume of training
+us to train on 15000 tweets instead of just 5000. The extra volume of training
 jumped our accuracy up to about 90\%. This was a huge success in the project
 because the jump in accuracy allows for us to find the correlation with a much
 higher accuracy. 
 
-When we brought our classifier to the full dataset we ran into one more
+When we brought our classifier to the full dataset, we ran into one more
 problem.  Previously when we were running our classifier we did it on such a
 small database that we could fit it all into memory. However, when we stepped
-up the the full dataset the operating system would start killing our process
+up the full dataset the operating system would start killing our process
 for using so much memory. This led to the last optimization we had to do on our
 classifier. We used a generator on the SQLite database to only return 1000
 stored tweets at a time, shown below. These optimizations dramatically
@@ -454,7 +455,7 @@ increased the effectiveness of our classification step.
 \inputminted{python}{examples/generator.py}
 
 The final piece of our classifier was putting it all together. After training
-our classifier we needed to read all of the stored tweets from the database and
+our classifier we needed to read all the stored tweets from the database and
 export them to a comma separated list for the Correlation analysis. To do this
 step we had a function that read from the database and echoed the tweet into
 the correct company bin.
@@ -469,7 +470,7 @@ separate company bins in about 10 hours using 3 different processes.
 After the sentiment analysis is completed and we had all the tweets
 classified as positive or negative we could begin the correlation analysis.
 
-We were then graphically examine the relationship between
+We were then able to graphically examine the relationship between
 the percent of positive tweets and the change in stock price. As well, we well
 perform a few different statistical tests to determine if there is any use full
 correlation. \newline\textbf{  Test One: Linear Regression} \newline\indent
@@ -478,7 +479,7 @@ percent of positive tweets. I'll use the Ordinary Least Squares estimators to
 derive the regression parameters. To use OLS estimators we assumed that
 there was a linear relationship between response variable and the regressor. We
 also assumed that the residuals of this model will be uncorrelated and
-have constant variance. The $lm()$ function in R will performed the regression.
+have constant variance. The $lm()$ function in R will perform the regression.
 
 
 Regression models for open and close values for each company were created and
@@ -550,7 +551,7 @@ Cor$(X,Y) = \frac{E ( X - \mu_x)(Y - \mu_y)}{\sigma_x\sigma_y}$
 
 
 This tests for linear correlation between x and y. If the correlation
-coefficient is $-1$ then the variables are perfectly negatively correlated. If
+coefficient is $-1$, the variables are perfectly negatively correlated. If
 it is 1 then they are perfectly positively correlated.  
 
 For Apple stock the correlation between the open values and the percent of positive
@@ -561,14 +562,14 @@ between the two.
 To evaluate the accuracy of the model we looked at the $R^2$ value, which shows
 the percent change in $Y$ that is explained by $X$. We can also look at the
 standard errors the of regression coefficients and the residuals of the models.
-If there is lots of correlation in the errors we can try using the generalized
+If there is much correlation in the errors we can try using the generalized
 least squares estimators instead. 
 
 It's clear that our original goal of predicting the stock market with twitter sentiment 
 was not achieved. We may have gotten these results because we did not split up the data 
 enough into sub-categories. We might have found more interesting patterns if we had split tweets
 up into categories based off what else was in the tweet about the company, i.e. look at all the
-tweets about a new product that Google/Amazon/Samsung/Apple came out with. We could have performed datamining
+tweets about a new product that Google/Amazon/Samsung/Apple came out with. We could have performed data mining
 on the positive and negative tweets to see if there were any similarities between them (other 
 than positive/negative words). Sometimes when too much data is meshed together patterns are masked;
 we don't know if this did or didn't happen. This is clearly a place that our project could be extend for future work.
@@ -577,7 +578,7 @@ the one we were looking for didn't exist it doesn't mean there are not others ou
 
 \subsection{Application}
 
-Even though we weren't able to determine a correlation between the data sets it
+Even though we were not able to determine a correlation between the data sets, it
 didn't mean that we didn't have useful tools. Companies are still very
 interested in what their company looks like in the public eye even if it
 doesn't have a direct relation to their stock price. There are a lot of complex
@@ -585,24 +586,29 @@ tools out there that can help a CEO but nothing that is quick and easy and fits
 in his pocket. To do this we created an application that does just this. We can
 analyze the sentiment of these companies in real time and then display that
 information to the user. In order to do this we have two parts. The server side
-that does real time sentiment analysis and hosts a rest api for devices to use.
+that does real time sentiment analysis and hosts a rest API for devices to use.
 The mobile side is the client side that allows users to see the sentiment in
 real time.
 
 \subsubsection{Rest API}
-TODO: JOSH
+
+The REST API is an application written in Haskell and Python in two distinct parts. The
+Python section is responsible for collecting and analyzing incoming tweets. It then broadcasts
+that information on a UDP socket. The Haskell side collects the data from the UDP socket and
+is responsible for aggregating and storing the data as well as maintaining a HTTP service that
+responds to a GET request and regurgitates the necessary information in JSON form.
 
 \subsubsection{Mobile Application}
 
 We built the mobile application for the android system. We can run it on any
 android device that runs Android Lollipop or greater. This gives the user a lot
-of flexibility. It is really easy for anyone to install the app to their phone
-and instantly get real time sentiment analysis. When the phone starts up it
-reaches out via a web request the the Rest api that is doing the sentiment
+of flexibility. It is really easy for anyone to install the application to their phone
+and instantly get real time sentiment analysis. When the phone starts up, it
+reaches out via a web request the Rest API that is doing the sentiment
 analysis. It gets the JSON back and parses it for the values. It then
 calculates the percent positive and uses that to update its GUI. For the GUI we
 chose to display a smiley face for a positive sentiment and a frowny face for a
-negative sentiment. A screen shot of the app running in the android simulator
+negative sentiment. A screen shot of the application running in the android simulator
 can be seen below.  
 
 \break
@@ -618,8 +624,8 @@ showed that less than 1\% of the change is stock value could be predicted using 
 methods. 
 
 Even though we weren't able to find a relationship our project was still a success.
-We were able to turn our sentiment analysis into a realtime tool that allows anyone
-to open up their phone and get realtime sentiment analysis. 
+We were able to turn our sentiment analysis into a real-time tool that allows anyone
+to open up their phone and get real-time sentiment analysis. 
 
 Through this data mining process we learned many things about mining for sentiment.
 
