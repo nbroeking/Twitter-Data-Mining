@@ -26,29 +26,33 @@ This code can be found in the Analysis sub folder. It consists of several sectio
 
 __Streaming.py__
    
-     This file has all the code that pulled tweets and stored them in our database.
+This file has all the code that pulled tweets and stored them in our database.
 
 __Classifier.py__
 
-    This file pulls the tweets from the database. Runs the pre-processor and
+This file pulls the tweets from the database. Runs the pre-processor and
 classifier and then exports the data to a csv file.
 
-___Stock_tweets.r__
+__Stock_tweets.r__
 
-    This file contains all the code used to determine no correlation between
+This file contains all the code used to determine no correlation between
 the data sets.
 
 __training.csv__
 
-    This file is read in by the classifier and contains all the training tweets
+This file is read in by the classifier and contains all the training tweets
 we used to train the Naive Bayes Classifier.
 
 __stop.txt__
 
-    This is a list of stop words that are determined to have no sentiment and
+This is a list of stop words that are determined to have no sentiment and
 so we can remove them from our feature vector.
 
 Realtime
 --------
 
-This sub directory contains all
+This sub directory contains all the code related to the Application.
+TwitterClassifier contains all the Android code and restApi contains all the
+server code.
+
+ 
